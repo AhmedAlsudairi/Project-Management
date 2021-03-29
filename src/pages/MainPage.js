@@ -8,12 +8,13 @@ const useStyles = makeStyles((theme) => ({
   },
   rotation: {
     animation: "$rotate-text infinite 5s linear",
-    height: "50%",
     marginTop: "20%",
     marginLeft: "50%",
-    width: "20%",
+    width: "fit-content",
+    height: "fit-content",
     justifyContent: "center",
     alignSelf: "center",
+    textAnchor: "center",
   },
   "@keyframes rotate-text": {
     "0%": {
@@ -27,21 +28,23 @@ const useStyles = makeStyles((theme) => ({
 
 function MainPage() {
   const classes = useStyles();
-  const rotation = () => {
-    return;
-  };
+
   return (
-    <Grid container alignItems="center" alignContent="center">
-      <Grid item container lg={2}></Grid>
-      <Grid item container lg={10}>
-        <Typography variant="h1">
-          Welcome To Main Page!!!
-          <div className={classes.rotation}>
-            <Typography variant="caption">Where there are nothing!</Typography>
-          </div>
-        </Typography>{" "}
+    <Grid container justify="center" lg={12}>
+      <Grid container>
+        <Grid item lg={2}></Grid>
+        <Grid item lg={8}>
+          <Typography variant="h1">
+            Welcome To Main Page!!!
+            <div className={classes.rotation}>
+              <Typography variant="caption">
+                Where there are nothing!
+              </Typography>
+            </div>
+          </Typography>
+        </Grid>
+        <Grid item lg={2}></Grid>
       </Grid>
-      <Grid item container lg={2}></Grid>
     </Grid>
   );
 }
