@@ -23,43 +23,53 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import SaveIcon from "@material-ui/icons/Save";
 import CloseIcon from "@material-ui/icons/Close";
 import { TextField } from "@material-ui/core";
-import CreateTask from "./CreateTask";
+import CreateResource from "./CreateResource";
 
 const rows = [
   {
-    id: "123",
     name: "task1",
-    duration: "3",
-    start: "2000-02-20",
-    finish: "2000-02-20",
+    type: "Work",
+    material: "",
+    max: "100%",
+    stRate: "15$",
+    ovt: "",
+    cost: "",
   },
   {
-    id: "1234",
     name: "task2",
-    duration: "3",
-    start: "2000-02-20",
-    finish: "2000-02-20",
+    type: "Work",
+    material: "",
+    max: "100%",
+    stRate: "15$",
+    ovt: "",
+    cost: "",
   },
   {
-    id: "1235",
     name: "task3",
-    duration: "3",
-    start: "2000-02-20",
-    finish: "2000-02-20",
+    type: "Work",
+    material: "",
+    max: "100%",
+    stRate: "15$",
+    ovt: "",
+    cost: "",
   },
   {
-    id: "1236",
     name: "task4",
-    duration: "3",
-    start: "2000-02-20",
-    finish: "2000-02-20",
+    type: "Work",
+    material: "",
+    max: "100%",
+    stRate: "15$",
+    ovt: "",
+    cost: "",
   },
   {
-    id: "1237",
     name: "task5",
-    duration: "3",
-    start: "2000-02-20",
-    finish: "2000-02-20",
+    type: "Work",
+    material: "",
+    max: "100%",
+    stRate: "15$",
+    ovt: "",
+    cost: "",
   },
 ];
 
@@ -90,16 +100,23 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
+  { id: "name", numeric: false, disablePadding: true, label: "Name" },
+  { id: "type", numeric: false, disablePadding: true, label: "Type" },
+  { id: "material", numeric: false, disablePadding: true, label: "Material" },
   {
-    id: "id",
+    id: "max",
     numeric: false,
     disablePadding: true,
-    label: "ID",
+    label: "Max (No. of Resource)",
   },
-  { id: "name", numeric: false, disablePadding: true, label: "Name" },
-  { id: "duration", numeric: false, disablePadding: true, label: "Duration" },
-  { id: "start", numeric: false, disablePadding: true, label: "Start " },
-  { id: "finish", numeric: false, disablePadding: true, label: "Finish " },
+  {
+    id: "stRate",
+    numeric: false,
+    disablePadding: true,
+    label: "St.Rate",
+  },
+  { id: "ovt.", numeric: false, disablePadding: true, label: "Ovt." },
+  { id: "cost", numeric: false, disablePadding: true, label: "Cost/Use" },
   { id: "operations", numeric: false, disablePadding: true },
 ];
 
@@ -265,7 +282,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function TasksTable() {
+export default function ResourcesTable() {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
@@ -403,25 +420,15 @@ export default function TasksTable() {
                     <TableRow
                       hover
                       onClick={(event) => handleClick(event, row)}
-                      role="checkbox"
-                      // aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row.id}
-                      // selected={isItemSelected}
+                      key={row.name}
                     >
-                      {/* <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={isItemSelected}
-                          inputProps={{ "aria-labelledby": labelId }}
-                        />
-                      </TableCell> */}
-                      <TableCell component="th" id={labelId}>
+                      {/* <TableCell component="th" id={labelId}>
                         {row.id}
-                      </TableCell>
+                      </TableCell> */}
                       <TableCell>
                         <TextField
                           value={
-                            taskSelected(row.id) ? currentTask.name : row.name
+                            taskSelected(row.name) ? currentTask.name : row.name
                           }
                           onChange={handleNameChange}
                         />
@@ -429,37 +436,59 @@ export default function TasksTable() {
                       <TableCell>
                         <TextField
                           value={
-                            taskSelected(row.id)
-                              ? currentTask.duration
-                              : row.duration
+                            taskSelected(row.name) ? currentTask.type : row.type
                           }
-                          onChange={handleDurationChange}
+                          //   onChange={handleDurationChange}
                         />
                       </TableCell>
                       <TableCell>
                         <TextField
-                          id="date"
-                          type="date"
-                          value={
-                            taskSelected(row.id) ? currentTask.start : row.start
-                          }
-                          onChange={handleStartChange}
-                          InputLabelProps={{
-                            shrink: true,
-                          }}
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <TextField
-                          value={
-                            taskSelected(row.id)
-                              ? currentTask.finish
-                              : row.finish
-                          }
-                          onChange={handleFinishChange}
                           disabled
+                          value={
+                            taskSelected(row.name)
+                              ? currentTask.material
+                              : row.material
+                          }
+                          //   onChange={handleStartChange}
                         />
                       </TableCell>
+                      <TableCell>
+                        <TextField
+                          value={
+                            taskSelected(row.name) ? currentTask.max : row.max
+                          }
+                          //   onChange={handleStartChange}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <TextField
+                          value={
+                            taskSelected(row.name)
+                              ? currentTask.stRate
+                              : row.stRate
+                          }
+                          //   onChange={handleStartChange}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <TextField
+                          disabled
+                          value={
+                            taskSelected(row.name) ? currentTask.ovt : row.ovt
+                          }
+                          //   onChange={handleStartChange}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <TextField
+                          disabled
+                          value={
+                            taskSelected(row.name) ? currentTask.cost : row.cost
+                          }
+                          //   onChange={handleStartChange}
+                        />
+                      </TableCell>
+
                       <TableCell>
                         {currentTask.changed ? (
                           <React.Fragment>
@@ -516,7 +545,7 @@ export default function TasksTable() {
         control={<Switch checked={dense} onChange={handleChangeDense} />}
         label="Dense padding"
       />
-      <CreateTask />
+      <CreateResource />
     </div>
   );
 }

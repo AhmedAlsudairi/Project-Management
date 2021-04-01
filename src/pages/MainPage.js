@@ -1,49 +1,61 @@
-import React from "react";
-import Typography from "@material-ui/core/Typography";
 import { Grid, makeStyles } from "@material-ui/core";
+import React from "react";
+import TasksTable from "../components/TasksTable";
+import Typography from "@material-ui/core/Typography";
+// import Paper from "@material-ui/core/Paper";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+import ResourcesTable from "../components/ResourcesTable";
 
 const useStyles = makeStyles((theme) => ({
-  rotated: {
-    transform: "rotate(90deg)",
+  root: {
+    flexGrow: 1,
+    padding: theme.spacing(3),
   },
-  rotation: {
-    animation: "$rotate-text infinite 5s linear",
-    marginTop: "20%",
-    marginLeft: "50%",
-    width: "fit-content",
-    height: "fit-content",
-    justifyContent: "center",
-    alignSelf: "center",
-    textAnchor: "center",
+  paper: {
+    height: 140,
+    width: 100,
   },
-  "@keyframes rotate-text": {
-    "0%": {
-      transform: "rotate(0deg)",
-    },
-    "100%": {
-      transform: "rotate(360deg)",
-    },
+  control: {
+    padding: theme.spacing(2),
   },
 }));
 
 function MainPage() {
   const classes = useStyles();
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
 
   return (
-    <Grid container justify="center" lg={12}>
-      <Grid container>
-        <Grid item lg={2}></Grid>
-        <Grid item lg={8}>
-          <Typography variant="h1">
-            Welcome To Main Page!!!
-            <div className={classes.rotation}>
-              <Typography variant="caption">
-                Where there are nothing!
-              </Typography>
-            </div>
+    <Grid>
+      <Grid container justify="center" className={classes.root}>
+        <Grid item xs={2}></Grid>
+        <Grid item xs={8}>
+          <Typography variant="h2" component="h1" align="center">
+            Project Management
           </Typography>
         </Grid>
-        <Grid item lg={2}></Grid>
+        <Grid item xs={2}></Grid>
+      </Grid>
+      <Grid container justify="center">
+        <Grid item xs="2"></Grid>
+        <Grid item xs="8">
+          <Tabs
+            value={value}
+            indicatorColor="primary"
+            textColor="primary"
+            onChange={handleChange}
+            aria-label="disabled tabs example"
+          >
+            <Tab label="Tasks" />
+            <Tab label="Resources" />
+          </Tabs>
+          {value === 0 ? <TasksTable /> : <ResourcesTable />}
+        </Grid>
+        <Grid item xs="2"></Grid>
       </Grid>
     </Grid>
   );
