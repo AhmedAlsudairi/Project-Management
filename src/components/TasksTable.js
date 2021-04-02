@@ -296,9 +296,21 @@ export default function TasksTable() {
   //   }
   //   setSelected([]);
   // };
+  const getFinishDate = (start, duration) => {
+    var y = parseInt(start.split("-")[0]);
+    var mm = parseInt(start.split("-")[1]) - 1;
+    var dd = parseInt(start.split("-")[2]);
+    var date = new Date(y, mm, dd, 0, 0, 0, 0);
 
+    date.setTime(date.getTime() + duration * 24 * 60 * 60 * 1000);
+
+    dd = date.getDate();
+    mm = date.getMonth() + 1;
+    y = date.getFullYear();
+    return y + "-" + mm + "-" + dd;
+  };
   const handleClick = (event, row) => {
-    if (row.id !== currentTask.id)
+    if (row.id !== currentTask.id) {
       setCurrentTask({
         id: row.id,
         name: row.name,
@@ -307,6 +319,7 @@ export default function TasksTable() {
         finish: row.finish,
         changed: false,
       });
+    }
   };
   const handleNameChange = (e) => {
     const newName = e.target.value;
@@ -316,13 +329,22 @@ export default function TasksTable() {
   };
   const handleDurationChange = (e) => {
     const newDuration = e.target.value;
-    if (!isNaN(newDuration))
-      setCurrentTask({ ...currentTask, duration: newDuration, changed: true });
+    if (isNaN(newDuration)) return;
+    setCurrentTask({
+      ...currentTask,
+      duration: newDuration,
+      finish: getFinishDate(currentTask.start, newDuration),
+      changed: true,
+    });
   };
   const handleStartChange = (e) => {
     const newStart = e.target.value;
-    console.log(newStart);
-    setCurrentTask({ ...currentTask, start: newStart, changed: true });
+    setCurrentTask({
+      ...currentTask,
+      start: newStart,
+      finish: getFinishDate(newStart, currentTask.duration),
+      changed: true,
+    });
   };
   const handleFinishChange = (e) => {
     const newFinish = e.target.value;
