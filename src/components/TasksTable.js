@@ -357,6 +357,17 @@ export default function TasksTable() {
   const handleSave = (row) => {
     console.log("save: ", row);
   };
+  const handleDisabledSaveBtn = () => {
+    if (
+      currentTask.name.length > 0 &&
+      currentTask.duration > 0 &&
+      currentTask.start.length > 0
+      // &&
+      // currentTask.stRate.length > 0
+    )
+      return true;
+    else return false;
+  };
   const handleDiscard = (row) => {
     console.log("discard: ", row);
     setCurrentTask({
@@ -473,6 +484,7 @@ export default function TasksTable() {
                               <IconButton
                                 aria-label="Save"
                                 onClick={() => handleSave(row)}
+                                disabled={!handleDisabledSaveBtn()}
                               >
                                 <SaveIcon />{" "}
                               </IconButton>
