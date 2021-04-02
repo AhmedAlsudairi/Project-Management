@@ -100,7 +100,7 @@ const headCells = [
   { id: "duration", numeric: false, disablePadding: true, label: "Duration" },
   { id: "start", numeric: false, disablePadding: true, label: "Start " },
   { id: "finish", numeric: false, disablePadding: true, label: "Finish " },
-  { id: "operations", numeric: false, disablePadding: true },
+  { id: "operations", numeric: false, disablePadding: false },
 ];
 
 function EnhancedTableHead(props) {
@@ -447,9 +447,7 @@ export default function TasksTable() {
                           inputProps={{ "aria-labelledby": labelId }}
                         />
                       </TableCell> */}
-                      <TableCell component="th" id={labelId}>
-                        {row.id}
-                      </TableCell>
+                      <TableCell id={labelId}>{row.id}</TableCell>
                       <TableCell>
                         <TextField
                           value={
