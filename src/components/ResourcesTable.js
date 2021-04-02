@@ -34,47 +34,52 @@ import CreateResource from "./CreateResource";
 
 const rows = [
   {
+    id: "task1",
     name: "task1",
-    type: "Work",
+    type: "work",
     material: "",
-    max: "100%",
-    stRate: "15$",
+    max: "100",
+    stRate: "15",
     ovt: "",
     cost: "",
   },
   {
+    id: "task2",
     name: "task2",
-    type: "Work",
+    type: "work",
     material: "",
-    max: "100%",
-    stRate: "15$",
+    max: "100",
+    stRate: "15",
     ovt: "",
     cost: "",
   },
   {
+    id: "task3",
     name: "task3",
-    type: "Work",
+    type: "work",
     material: "",
-    max: "100%",
-    stRate: "15$",
+    max: "100",
+    stRate: "15",
     ovt: "",
     cost: "",
   },
   {
+    id: "task4",
     name: "task4",
-    type: "Work",
+    type: "work",
     material: "",
-    max: "100%",
-    stRate: "15$",
+    max: "100",
+    stRate: "15",
     ovt: "",
     cost: "",
   },
   {
+    id: "task5",
     name: "task5",
-    type: "Work",
+    type: "work",
     material: "",
-    max: "100%",
-    stRate: "15$",
+    max: "100",
+    stRate: "15",
     ovt: "",
     cost: "",
   },
@@ -301,12 +306,11 @@ export default function ResourcesTable() {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [currentTask, setCurrentTask] = React.useState({
-    id: "",
+  const [currentResource, setCurrentResource] = React.useState({
     name: "",
-    duration: "",
-    start: "",
-    finish: "",
+    type: "",
+    max: "",
+    stRate: "",
     changed: false,
   });
 
@@ -326,36 +330,38 @@ export default function ResourcesTable() {
   // };
 
   const handleClick = (event, row) => {
-    console.log(row, " clicked");
-    if (row.id !== currentTask.id)
-      setCurrentTask({
+    if (row.id !== currentResource.id)
+      setCurrentResource({
         id: row.id,
         name: row.name,
-        duration: row.duration,
-        start: row.start,
-        finish: row.finish,
+        type: row.type,
+        max: row.max,
+        stRate: row.stRate,
         changed: false,
       });
   };
   const handleNameChange = (e) => {
     const newName = e.target.value;
-    console.log("name changed");
-    // e.target.value = currentTask.name;
-    setCurrentTask({ ...currentTask, name: newName, changed: true });
+    // e.target.value = currentResource.name;
+    setCurrentResource({ ...currentResource, name: newName, changed: true });
   };
-  const handleDurationChange = (e) => {
-    const newDuration = e.target.value;
-    if (!isNaN(newDuration))
-      setCurrentTask({ ...currentTask, duration: newDuration, changed: true });
+  const handleTypeChange = (e) => {
+    const newType = e.target.value;
+    setCurrentResource({ ...currentResource, type: newType, changed: true });
   };
-  const handleStartChange = (e) => {
-    const newStart = e.target.value;
-    console.log(newStart);
-    setCurrentTask({ ...currentTask, start: newStart, changed: true });
+  const handleMaxChange = (e) => {
+    const newMax = e.target.value;
+    if (isNaN(newMax) || newMax > 900 || newMax < 0) return;
+    setCurrentResource({ ...currentResource, max: newMax, changed: true });
   };
-  const handleFinishChange = (e) => {
-    const newFinish = e.target.value;
-    setCurrentTask({ ...currentTask, finish: newFinish, changed: true });
+  const handleStRateChange = (e) => {
+    const newStRate = e.target.value;
+    if (isNaN(newStRate)) return;
+    setCurrentResource({
+      ...currentResource,
+      stRate: newStRate,
+      changed: true,
+    });
   };
 
   const handleChangePage = (event, newPage) => {
@@ -376,24 +382,34 @@ export default function ResourcesTable() {
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
-  const taskSelected = (id) => {
-    if (id === currentTask.id) return true;
+  const isResourceSelected = (id) => {
+    if (id === currentResource.id) return true;
     else return false;
   };
-  const handleDelete = (id) => {
-    console.log("Delete: ", id);
+  const handleDelete = (name) => {
+    console.log("Delete: ", name);
   };
   const handleSave = (row) => {
     console.log("save: ", row);
   };
+  const handleDisabledSaveBtn = () => {
+    if (
+      currentResource.name.length > 0 &&
+      currentResource.max.length > 0 &&
+      currentResource.type.length > 0 &&
+      currentResource.stRate.length > 0
+    )
+      return true;
+    else return false;
+  };
   const handleDiscard = (row) => {
     console.log("discard: ", row);
-    setCurrentTask({
+    setCurrentResource({
       id: row.id,
       name: row.name,
-      duration: row.duration,
-      start: row.start,
-      finish: row.finish,
+      type: row.type,
+      max: row.max,
+      stRate: row.stRate,
       changed: false,
     });
   };
@@ -439,7 +455,9 @@ export default function ResourcesTable() {
                       <TableCell>
                         <TextField
                           value={
-                            taskSelected(row.name) ? currentTask.name : row.name
+                            isResourceSelected(row.id)
+                              ? currentResource.name
+                              : row.name
                           }
                           onChange={handleNameChange}
                         />
@@ -449,8 +467,12 @@ export default function ResourcesTable() {
                           <Select
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
-                            // value={age}
-                            // onChange={handleChange}
+                            value={
+                              isResourceSelected(row.id)
+                                ? currentResource.type
+                                : row.type
+                            }
+                            onChange={handleTypeChange}
                           >
                             <MenuItem value={"work"}>Work</MenuItem>
                             <MenuItem value={"material"}>Material</MenuItem>
@@ -459,7 +481,7 @@ export default function ResourcesTable() {
                         </FormControl>
                         {/* <TextField
                           value={
-                            taskSelected(row.name) ? currentTask.type : row.type
+                            isResourceSelected(row.id) ? currentResource.type : row.type
                           }
                           //   onChange={handleDurationChange}
                         /> */}
@@ -468,26 +490,32 @@ export default function ResourcesTable() {
                         <TextField
                           disabled
                           value={
-                            taskSelected(row.name)
-                              ? currentTask.material
+                            isResourceSelected(row.id)
+                              ? currentResource.material
                               : row.material
                           }
-                          //   onChange={handleStartChange}
                         />
                       </TableCell>
                       <TableCell>
                         <TextField
                           value={
-                            taskSelected(row.name) ? currentTask.max : row.max
+                            isResourceSelected(row.id)
+                              ? currentResource.max
+                              : row.max
                           }
-                          //   onChange={handleStartChange}
+                          InputProps={{
+                            endAdornment: (
+                              <InputAdornment position="end">%</InputAdornment>
+                            ),
+                          }}
+                          onChange={handleMaxChange}
                         />
                       </TableCell>
                       <TableCell>
                         <TextField
                           value={
-                            taskSelected(row.name)
-                              ? currentTask.stRate
+                            isResourceSelected(row.id)
+                              ? currentResource.stRate
                               : row.stRate
                           }
                           InputProps={{
@@ -495,14 +523,16 @@ export default function ResourcesTable() {
                               <InputAdornment position="end">$</InputAdornment>
                             ),
                           }}
-                          //   onChange={handleStartChange}
+                          onChange={handleStRateChange}
                         />
                       </TableCell>
                       <TableCell>
                         <TextField
                           disabled
                           value={
-                            taskSelected(row.name) ? currentTask.ovt : row.ovt
+                            isResourceSelected(row.id)
+                              ? currentResource.ovt
+                              : row.ovt
                           }
                           //   onChange={handleStartChange}
                         />
@@ -511,19 +541,23 @@ export default function ResourcesTable() {
                         <TextField
                           disabled
                           value={
-                            taskSelected(row.name) ? currentTask.cost : row.cost
+                            isResourceSelected(row.id)
+                              ? currentResource.cost
+                              : row.cost
                           }
                           //   onChange={handleStartChange}
                         />
                       </TableCell>
 
                       <TableCell>
-                        {currentTask.changed ? (
+                        {currentResource.changed &&
+                        isResourceSelected(row.id) ? (
                           <React.Fragment>
                             <Tooltip title="Save">
                               <IconButton
                                 aria-label="Save"
                                 onClick={() => handleSave(row)}
+                                disabled={!handleDisabledSaveBtn()}
                               >
                                 <SaveIcon />{" "}
                               </IconButton>
