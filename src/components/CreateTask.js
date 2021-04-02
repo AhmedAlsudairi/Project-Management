@@ -1,11 +1,12 @@
 import {
   Button,
+  InputAdornment,
   makeStyles,
   Paper,
   TextField,
   Typography,
 } from "@material-ui/core";
-import React from "react";
+import React, { useState } from "react";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -23,10 +24,36 @@ const useStyles = makeStyles((theme) => ({
 
 function CreateTask() {
   const classes = useStyles();
+  const [ID, setID] = useState({ value: "", valid: false });
+  const [name, setName] = useState({ value: "", valid: false });
+  const [duration, setDuration] = useState({ value: "", valid: false });
+  const [start, setStart] = useState({ value: "", valid: false });
 
   const handleCreateTask = (e) => {
     e.preventDefault();
     console.log("task created");
+  };
+
+  const handleIDChange = (e) => {
+    const newID = e.target.value;
+    if (newID === "") setID({ value: "", valid: false });
+    else setID({ value: newID, valid: true });
+  };
+  const handleNameChange = (e) => {
+    const newName = e.target.value;
+    if (newName === "") setName({ value: "", valid: false });
+    else setName({ value: newName, valid: true });
+  };
+  const handleDurationChange = (e) => {
+    const newDuration = e.target.value;
+    if (isNaN(newDuration)) return;
+    if (newDuration === "") setDuration({ value: "", valid: false });
+    else setDuration({ value: newDuration, valid: true });
+  };
+  const handleStartChange = (e) => {
+    const newStart = e.target.value;
+    if (newStart === "") setStart({ value: "", valid: false });
+    else setStart({ value: newStart, valid: true });
   };
   return (
     <Paper square className={classes.paper}>
@@ -38,6 +65,8 @@ function CreateTask() {
           id="taskID"
           label="Task ID"
           margin="dense"
+          value={ID.value}
+          onChange={handleIDChange}
         />
         <TextField
           className={classes.textField}
@@ -45,6 +74,8 @@ function CreateTask() {
           id="taskName"
           label="Task Name"
           margin="dense"
+          value={name.value}
+          onChange={handleNameChange}
         />
         <TextField
           className={classes.textField}
@@ -52,14 +83,20 @@ function CreateTask() {
           id="taskDuration"
           label="Duration"
           margin="dense"
+          value={duration.value}
+          onChange={handleDurationChange}
+          InputProps={{
+            endAdornment: <InputAdornment position="end">days</InputAdornment>,
+          }}
         />
         <TextField
           id="date"
           type="date"
           required
+          label="Start Date"
           className={classes.textField}
-          //   value={taskSelected(row.id) ? currentTask.start : row.start}
-          //   onChange={handleStartChange}
+          value={start.value}
+          onChange={handleStartChange}
           margin="dense"
           InputLabelProps={{
             shrink: true,
@@ -70,6 +107,7 @@ function CreateTask() {
           variant="contained"
           color="primary"
           type={"submit"}
+          disabled={!(ID.valid && name.valid && duration.valid && start.valid)}
         >
           Create new task
         </Button>
