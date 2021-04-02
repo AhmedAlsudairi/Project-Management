@@ -298,7 +298,6 @@ export default function TasksTable() {
   // };
 
   const handleClick = (event, row) => {
-    console.log(row, " clicked");
     if (row.id !== currentTask.id)
       setCurrentTask({
         id: row.id,
@@ -468,7 +467,7 @@ export default function TasksTable() {
                         />
                       </TableCell>
                       <TableCell>
-                        {currentTask.changed ? (
+                        {currentTask.changed && taskSelected(row.id) ? (
                           <React.Fragment>
                             <Tooltip title="Save">
                               <IconButton
