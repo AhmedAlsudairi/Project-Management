@@ -22,7 +22,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 // import FilterListIcon from "@material-ui/icons/FilterList";
 import SaveIcon from "@material-ui/icons/Save";
 import CloseIcon from "@material-ui/icons/Close";
-import { TextField } from "@material-ui/core";
+import { InputAdornment, TextField } from "@material-ui/core";
 import CreateTask from "./CreateTask";
 
 const rows = [
@@ -434,6 +434,13 @@ export default function TasksTable() {
                               : row.duration
                           }
                           onChange={handleDurationChange}
+                          InputProps={{
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                days
+                              </InputAdornment>
+                            ),
+                          }}
                         />
                       </TableCell>
                       <TableCell>
