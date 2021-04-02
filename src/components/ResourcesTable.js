@@ -22,7 +22,14 @@ import DeleteIcon from "@material-ui/icons/Delete";
 // import FilterListIcon from "@material-ui/icons/FilterList";
 import SaveIcon from "@material-ui/icons/Save";
 import CloseIcon from "@material-ui/icons/Close";
-import { TextField } from "@material-ui/core";
+import {
+  FormControl,
+  InputAdornment,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from "@material-ui/core";
 import CreateResource from "./CreateResource";
 
 const rows = [
@@ -280,6 +287,10 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(1),
     width: "25ch",
   },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+  },
 }));
 
 export default function ResourcesTable() {
@@ -434,12 +445,24 @@ export default function ResourcesTable() {
                         />
                       </TableCell>
                       <TableCell>
-                        <TextField
+                        <FormControl className={classes.formControl}>
+                          <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            // value={age}
+                            // onChange={handleChange}
+                          >
+                            <MenuItem value={"work"}>Work</MenuItem>
+                            <MenuItem value={"material"}>Material</MenuItem>
+                            <MenuItem value={"cost"}>Cost</MenuItem>
+                          </Select>
+                        </FormControl>
+                        {/* <TextField
                           value={
                             taskSelected(row.name) ? currentTask.type : row.type
                           }
                           //   onChange={handleDurationChange}
-                        />
+                        /> */}
                       </TableCell>
                       <TableCell>
                         <TextField
@@ -467,6 +490,11 @@ export default function ResourcesTable() {
                               ? currentTask.stRate
                               : row.stRate
                           }
+                          InputProps={{
+                            endAdornment: (
+                              <InputAdornment position="end">$</InputAdornment>
+                            ),
+                          }}
                           //   onChange={handleStartChange}
                         />
                       </TableCell>
