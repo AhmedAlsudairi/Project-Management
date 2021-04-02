@@ -32,6 +32,28 @@ function CreateTask() {
   const handleCreateTask = (e) => {
     e.preventDefault();
     console.log("task created");
+    const task = {
+      ID: ID.value,
+      name: name.value,
+      duration: duration.value,
+      start: start.value,
+      finish: getFinishDate(start.value, duration.value),
+    };
+    console.log(task);
+  };
+
+  const getFinishDate = (start, duration) => {
+    var y = parseInt(start.split("-")[0]);
+    var mm = parseInt(start.split("-")[1]) - 1;
+    var dd = parseInt(start.split("-")[2]);
+    var date = new Date(y, mm, dd, 0, 0, 0, 0);
+
+    date.setTime(date.getTime() + duration * 24 * 60 * 60 * 1000);
+
+    dd = date.getDate();
+    mm = date.getMonth() + 1;
+    y = date.getFullYear();
+    return y + "-" + mm + "-" + dd;
   };
 
   const handleIDChange = (e) => {
