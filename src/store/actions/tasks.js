@@ -23,15 +23,11 @@ export const fetchTasksFail = (error) => {
     }
 }
 
-export const fetchTasks = (projectID, token) => {
+export const fetchTasks = () => {
     return dispatch => {
         dispatch(fetchTasksStart());
 
-        axios.get(`/project/Tasks?pID=${projectID}`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
+        axios.get(`/project/Tasks`)
         .then(res => {
             let fechedTasks = [...res.data.Tasks];
             console.log(fechedTasks);
