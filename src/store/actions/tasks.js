@@ -63,26 +63,21 @@ export const createTaskFail = () => {
     }
 }
 
-export const createTaskInProject = (projectID,TaskName,TaskDescription,TaskType,username, token) => {
-    console.log(TaskType);
+export const createTaskInProject = (name,duration,start,finish,resources) => {
     return dispatch => {
         dispatch(fetchTasksStart());
         dispatch(createTaskstart());
         const data= {
-            pID: projectID,
-            aName: TaskName,
-            aDescription: TaskDescription,
-            Task_type: TaskType,
-            username: username
+            name: name,
+            duration: duration,
+            start: start,
+            finish: finish,
+            resources: resources,
         }
         console.log(data);
-        axios.post(`/Task`,data, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
+        axios.post(`/Task`,data)
         .then(res => {
-            dispatch(fetchTasks(projectID,token));
+            dispatch(fetchTasks());
             dispatch(createTasksuccess());
         })
         .catch(err=>{
