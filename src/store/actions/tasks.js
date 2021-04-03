@@ -100,27 +100,23 @@ export const removeTaskFromProject = (id) => {
     }
 }
 
-export const modifyTaskInProject = (projectID,TaskName,TaskDescription,TaskType, TaskID, username, token) => {
+export const modifyTaskInProject = (id,name,duration,start,finish,resources) => {
     
     return dispatch => {
         dispatch(fetchTasksStart());
         dispatch(createTaskstart());
         const data= {
-            pID: projectID,
-            aName: TaskName,
-            aDescription: TaskDescription,
-            Task_type: TaskType,
-            aID: TaskID,
-            username: username
+            id: id,
+            name: name,
+            duration: duration,
+            start: start,
+            finish: finish,
+            resources: resources,
         }
         console.log(data);
-        axios.patch(`/Task`,data, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
+        axios.patch(`/Task`,data)
         .then(res => {
-            dispatch(fetchTasks(projectID,token));
+            dispatch(fetchTasks());
             dispatch(createTasksuccess());
         })
         .catch(err=>{
