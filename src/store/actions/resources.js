@@ -17,7 +17,7 @@ export const fetchResourcesSuccess = (resources) => {
 }
 
 export const fetchResourcesFail = (error) => {
-    return{
+    return {
         type: actionTypes.FETCH_RESOURCES_FAIL,
         error: error
     }
@@ -28,15 +28,15 @@ export const fetchResources = () => {
         dispatch(fetchResourcesStart());
 
         axios.get(`/project/Resources?pID=${projectID}`)
-        .then(res => {
-            let fechedResources = [...res.data.Resources];
-            console.log(fechedResources);
-            dispatch(fetchResourcesSuccess(fechedResources));
-            
-        })
-        .catch(err=>{
-            dispatch(fetchResourcesFail(err));
-        });
+            .then(res => {
+                let fechedResources = [...res.data.Resources];
+                console.log(fechedResources);
+                dispatch(fetchResourcesSuccess(fechedResources));
+
+            })
+            .catch(err => {
+                dispatch(fetchResourcesFail(err));
+            });
     }
 }
 
@@ -54,64 +54,58 @@ export const createResourcesuccess = () => {
 }
 
 export const createResourceFail = () => {
-    return{
+    return {
         type: actionTypes.CREATE_RESOURCE_FAIL
     }
 }
 
-export const createResourceInProject = (projectID,ResourceName,ResourceDescription,ResourceType,username, token) => {
-    console.log(ResourceType);
+export const createResourceInProject = (name, type, material, max, rate, ovt, cost, tasks) => {
     return dispatch => {
         dispatch(fetchResourcesStart());
         dispatch(createResourcestart());
-        const data= {
-            pID: projectID,
-            aName: ResourceName,
-            aDescription: ResourceDescription,
-            Resource_type: ResourceType,
-            username: username
+        const data = {
+            name: name,
+            type: type,
+            material: material,
+            max: max,
+            rate: rate,
+            ovt: ovt,
+            cost: cost,
+            tasks: tasks,
         }
         console.log(data);
-        axios.post(`/Resource`,data, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
-        .then(res => {
-            dispatch(fetchResources(projectID,token));
-            dispatch(createResourcesuccess());
-        })
-        .catch(err=>{
-            dispatch(createResourceFail());
-        });
+        axios.post(`/Resource`, data)
+            .then(res => {
+                dispatch(fetchResources());
+                dispatch(createResourcesuccess());
+            })
+            .catch(err => {
+                dispatch(createResourceFail());
+            });
     }
 }
 
-export const removeResourceFromProject = (projectID,ResourceID, token) => {
-    console.log(token);
+export const removeResourceFromProject = (id) => {
+
     return dispatch => {
         dispatch(fetchResourcesStart());
 
-        axios.delete(`/Resource?aID=${ResourceID}&pID=${projectID}`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
-        .then(res => {
-            dispatch(fetchResources(projectID,token));
-        })
-        .catch(err=>{
-            dispatch(fetchResourcesFail(err));
-        });
+        axios.delete(`/Resource?ID=${id}`)
+            .then(res => {
+                dispatch(fetchResources());
+            })
+            .catch(err => {
+                dispatch(fetchResourcesFail(err));
+            });
     }
 }
 
-export const modifyResourceInProject = (projectID,ResourceName,ResourceDescription,ResourceType, ResourceID, username, token) => {
-    
+export const modifyResourceInProject = (projectID, ResourceName, ResourceDescription, ResourceType, ResourceID, username, token) => {
+
     return dispatch => {
         dispatch(fetchResourcesStart());
         dispatch(createResourcestart());
-        const data= {
+        const data = {
             pID: projectID,
             aName: ResourceName,
             aDescription: ResourceDescription,
@@ -120,18 +114,18 @@ export const modifyResourceInProject = (projectID,ResourceName,ResourceDescripti
             username: username
         }
         console.log(data);
-        axios.patch(`/Resource`,data, {
+        axios.patch(`/Resource`, data, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         })
-        .then(res => {
-            dispatch(fetchResources(projectID,token));
-            dispatch(createResourcesuccess());
-        })
-        .catch(err=>{
-            dispatch(createResourceFail());
-        });
+            .then(res => {
+                dispatch(fetchResources(projectID, token));
+                dispatch(createResourcesuccess());
+            })
+            .catch(err => {
+                dispatch(createResourceFail());
+            });
     }
 }
 
