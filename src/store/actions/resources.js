@@ -100,27 +100,26 @@ export const removeResourceFromProject = (id) => {
     }
 }
 
-export const modifyResourceInProject = (projectID, ResourceName, ResourceDescription, ResourceType, ResourceID, username, token) => {
+export const modifyResourceInProject = (id, name, type, material, max, rate, ovt, cost, tasks) => {
 
     return dispatch => {
         dispatch(fetchResourcesStart());
         dispatch(createResourcestart());
         const data = {
-            pID: projectID,
-            aName: ResourceName,
-            aDescription: ResourceDescription,
-            Resource_type: ResourceType,
-            aID: ResourceID,
-            username: username
+            id: id,
+            name: name,
+            type: type,
+            material: material,
+            max: max,
+            rate: rate,
+            ovt: ovt,
+            cost: cost,
+            tasks: tasks,
         }
         console.log(data);
-        axios.patch(`/Resource`, data, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
+        axios.patch(`/Resource`, data)
             .then(res => {
-                dispatch(fetchResources(projectID, token));
+                dispatch(fetchResources());
                 dispatch(createResourcesuccess());
             })
             .catch(err => {
