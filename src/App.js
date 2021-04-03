@@ -2,7 +2,6 @@ import "./App.css";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import MainPage from "./pages/MainPage";
-import Tasks from "./pages/Tasks";
 
 const theme = createMuiTheme({
   palette: {
@@ -27,7 +26,6 @@ function App() {
         {/* <AppBar /> */}
         <Switch>
           <Route exact path="/" component={MainPage} />
-          <Route exact path="/tasks" component={Tasks} />
         </Switch>
       </ThemeProvider>
     </BrowserRouter>

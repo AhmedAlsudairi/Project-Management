@@ -22,44 +22,66 @@ import DeleteIcon from "@material-ui/icons/Delete";
 // import FilterListIcon from "@material-ui/icons/FilterList";
 import SaveIcon from "@material-ui/icons/Save";
 import CloseIcon from "@material-ui/icons/Close";
-import { InputAdornment, TextField } from "@material-ui/core";
-import CreateTask from "./CreateTask";
+import {
+  FormControl,
+  InputAdornment,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from "@material-ui/core";
+import CreateResource from "./CreateResource";
 
 const rows = [
   {
-    id: "123",
+    id: "task1",
     name: "task1",
-    duration: "3",
-    start: "2000-02-20",
-    finish: "2000-02-20",
+    type: "work",
+    material: "",
+    max: "100",
+    stRate: "15",
+    ovt: "",
+    cost: "",
   },
   {
-    id: "1234",
+    id: "task2",
     name: "task2",
-    duration: "3",
-    start: "2000-02-20",
-    finish: "2000-02-20",
+    type: "work",
+    material: "",
+    max: "100",
+    stRate: "15",
+    ovt: "",
+    cost: "",
   },
   {
-    id: "1235",
+    id: "task3",
     name: "task3",
-    duration: "3",
-    start: "2000-02-20",
-    finish: "2000-02-20",
+    type: "work",
+    material: "",
+    max: "100",
+    stRate: "15",
+    ovt: "",
+    cost: "",
   },
   {
-    id: "1236",
+    id: "task4",
     name: "task4",
-    duration: "3",
-    start: "2000-02-20",
-    finish: "2000-02-20",
+    type: "work",
+    material: "",
+    max: "100",
+    stRate: "15",
+    ovt: "",
+    cost: "",
   },
   {
-    id: "1237",
+    id: "task5",
     name: "task5",
-    duration: "3",
-    start: "2000-02-20",
-    finish: "2000-02-20",
+    type: "work",
+    material: "",
+    max: "100",
+    stRate: "15",
+    ovt: "",
+    cost: "",
   },
 ];
 
@@ -90,16 +112,23 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
+  { id: "name", numeric: false, disablePadding: true, label: "Name" },
+  { id: "type", numeric: false, disablePadding: true, label: "Type" },
+  { id: "material", numeric: false, disablePadding: true, label: "Material" },
   {
-    id: "id",
+    id: "max",
     numeric: false,
     disablePadding: true,
-    label: "ID",
+    label: "Max (No. of Resource)",
   },
-  { id: "name", numeric: false, disablePadding: true, label: "Name" },
-  { id: "duration", numeric: false, disablePadding: true, label: "Duration" },
-  { id: "start", numeric: false, disablePadding: true, label: "Start " },
-  { id: "finish", numeric: false, disablePadding: true, label: "Finish " },
+  {
+    id: "stRate",
+    numeric: false,
+    disablePadding: true,
+    label: "St.Rate",
+  },
+  { id: "ovt.", numeric: false, disablePadding: true, label: "Ovt." },
+  { id: "cost", numeric: false, disablePadding: true, label: "Cost/Use" },
   { id: "operations", numeric: false, disablePadding: false },
 ];
 
@@ -263,9 +292,13 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(1),
     width: "25ch",
   },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+  },
 }));
 
-export default function TasksTable() {
+export default function ResourcesTable() {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
@@ -273,12 +306,11 @@ export default function TasksTable() {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [currentTask, setCurrentTask] = React.useState({
-    id: "",
+  const [currentResource, setCurrentResource] = React.useState({
     name: "",
-    duration: "",
-    start: "",
-    finish: "",
+    type: "",
+    max: "",
+    stRate: "",
     changed: false,
   });
 
@@ -296,59 +328,40 @@ export default function TasksTable() {
   //   }
   //   setSelected([]);
   // };
-  const getFinishDate = (start, duration) => {
-    var y = parseInt(start.split("-")[0]);
-    var mm = parseInt(start.split("-")[1]) - 1;
-    var dd = parseInt(start.split("-")[2]);
-    var date = new Date(y, mm, dd, 0, 0, 0, 0);
 
-    date.setTime(date.getTime() + duration * 24 * 60 * 60 * 1000);
-
-    dd = date.getDate();
-    mm = date.getMonth() + 1;
-    y = date.getFullYear();
-    return y + "-" + mm + "-" + dd;
-  };
   const handleClick = (event, row) => {
-    if (row.id !== currentTask.id) {
-      setCurrentTask({
+    if (row.id !== currentResource.id)
+      setCurrentResource({
         id: row.id,
         name: row.name,
-        duration: row.duration,
-        start: row.start,
-        finish: row.finish,
+        type: row.type,
+        max: row.max,
+        stRate: row.stRate,
         changed: false,
       });
-    }
   };
   const handleNameChange = (e) => {
     const newName = e.target.value;
-    console.log("name changed");
-    // e.target.value = currentTask.name;
-    setCurrentTask({ ...currentTask, name: newName, changed: true });
+    // e.target.value = currentResource.name;
+    setCurrentResource({ ...currentResource, name: newName, changed: true });
   };
-  const handleDurationChange = (e) => {
-    const newDuration = e.target.value;
-    if (isNaN(newDuration)) return;
-    setCurrentTask({
-      ...currentTask,
-      duration: newDuration,
-      finish: getFinishDate(currentTask.start, newDuration),
+  const handleTypeChange = (e) => {
+    const newType = e.target.value;
+    setCurrentResource({ ...currentResource, type: newType, changed: true });
+  };
+  const handleMaxChange = (e) => {
+    const newMax = e.target.value;
+    if (isNaN(newMax) || newMax > 900 || newMax < 0) return;
+    setCurrentResource({ ...currentResource, max: newMax, changed: true });
+  };
+  const handleStRateChange = (e) => {
+    const newStRate = e.target.value;
+    if (isNaN(newStRate)) return;
+    setCurrentResource({
+      ...currentResource,
+      stRate: newStRate,
       changed: true,
     });
-  };
-  const handleStartChange = (e) => {
-    const newStart = e.target.value;
-    setCurrentTask({
-      ...currentTask,
-      start: newStart,
-      finish: getFinishDate(newStart, currentTask.duration),
-      changed: true,
-    });
-  };
-  const handleFinishChange = (e) => {
-    const newFinish = e.target.value;
-    setCurrentTask({ ...currentTask, finish: newFinish, changed: true });
   };
 
   const handleChangePage = (event, newPage) => {
@@ -369,35 +382,34 @@ export default function TasksTable() {
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
-  const taskSelected = (id) => {
-    if (id === currentTask.id) return true;
+  const isResourceSelected = (id) => {
+    if (id === currentResource.id) return true;
     else return false;
   };
-  const handleDelete = (id) => {
-    console.log("Delete: ", id);
+  const handleDelete = (name) => {
+    console.log("Delete: ", name);
   };
   const handleSave = (row) => {
     console.log("save: ", row);
   };
   const handleDisabledSaveBtn = () => {
     if (
-      currentTask.name.length > 0 &&
-      currentTask.duration > 0 &&
-      currentTask.start.length > 0
-      // &&
-      // currentTask.stRate.length > 0
+      currentResource.name.length > 0 &&
+      currentResource.max.length > 0 &&
+      currentResource.type.length > 0 &&
+      currentResource.stRate.length > 0
     )
       return true;
     else return false;
   };
   const handleDiscard = (row) => {
     console.log("discard: ", row);
-    setCurrentTask({
+    setCurrentResource({
       id: row.id,
       name: row.name,
-      duration: row.duration,
-      start: row.start,
-      finish: row.finish,
+      type: row.type,
+      max: row.max,
+      stRate: row.stRate,
       changed: false,
     });
   };
@@ -435,70 +447,111 @@ export default function TasksTable() {
                     <TableRow
                       hover
                       onClick={(event) => handleClick(event, row)}
-                      role="checkbox"
-                      // aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row.id}
-                      // selected={isItemSelected}
+                      key={row.name}
                     >
-                      {/* <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={isItemSelected}
-                          inputProps={{ "aria-labelledby": labelId }}
-                        />
+                      {/* <TableCell component="th" id={labelId}>
+                        {row.id}
                       </TableCell> */}
-                      <TableCell id={labelId}>{row.id}</TableCell>
                       <TableCell>
                         <TextField
                           value={
-                            taskSelected(row.id) ? currentTask.name : row.name
+                            isResourceSelected(row.id)
+                              ? currentResource.name
+                              : row.name
                           }
                           onChange={handleNameChange}
                         />
                       </TableCell>
                       <TableCell>
+                        <FormControl className={classes.formControl}>
+                          <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={
+                              isResourceSelected(row.id)
+                                ? currentResource.type
+                                : row.type
+                            }
+                            onChange={handleTypeChange}
+                          >
+                            <MenuItem value={"work"}>Work</MenuItem>
+                            <MenuItem value={"material"}>Material</MenuItem>
+                            <MenuItem value={"cost"}>Cost</MenuItem>
+                          </Select>
+                        </FormControl>
+                        {/* <TextField
+                          value={
+                            isResourceSelected(row.id) ? currentResource.type : row.type
+                          }
+                          //   onChange={handleDurationChange}
+                        /> */}
+                      </TableCell>
+                      <TableCell>
+                        <TextField
+                          disabled
+                          value={
+                            isResourceSelected(row.id)
+                              ? currentResource.material
+                              : row.material
+                          }
+                        />
+                      </TableCell>
+                      <TableCell>
                         <TextField
                           value={
-                            taskSelected(row.id)
-                              ? currentTask.duration
-                              : row.duration
+                            isResourceSelected(row.id)
+                              ? currentResource.max
+                              : row.max
                           }
-                          onChange={handleDurationChange}
                           InputProps={{
                             endAdornment: (
-                              <InputAdornment position="end">
-                                days
-                              </InputAdornment>
+                              <InputAdornment position="end">%</InputAdornment>
                             ),
                           }}
+                          onChange={handleMaxChange}
                         />
                       </TableCell>
                       <TableCell>
                         <TextField
-                          id="date"
-                          type="date"
                           value={
-                            taskSelected(row.id) ? currentTask.start : row.start
+                            isResourceSelected(row.id)
+                              ? currentResource.stRate
+                              : row.stRate
                           }
-                          onChange={handleStartChange}
-                          InputLabelProps={{
-                            shrink: true,
+                          InputProps={{
+                            endAdornment: (
+                              <InputAdornment position="end">$</InputAdornment>
+                            ),
                           }}
+                          onChange={handleStRateChange}
                         />
                       </TableCell>
                       <TableCell>
                         <TextField
-                          value={
-                            taskSelected(row.id)
-                              ? currentTask.finish
-                              : row.finish
-                          }
-                          onChange={handleFinishChange}
                           disabled
+                          value={
+                            isResourceSelected(row.id)
+                              ? currentResource.ovt
+                              : row.ovt
+                          }
+                          //   onChange={handleStartChange}
                         />
                       </TableCell>
                       <TableCell>
-                        {currentTask.changed && taskSelected(row.id) ? (
+                        <TextField
+                          disabled
+                          value={
+                            isResourceSelected(row.id)
+                              ? currentResource.cost
+                              : row.cost
+                          }
+                          //   onChange={handleStartChange}
+                        />
+                      </TableCell>
+
+                      <TableCell>
+                        {currentResource.changed &&
+                        isResourceSelected(row.id) ? (
                           <React.Fragment>
                             <Tooltip title="Save">
                               <IconButton
@@ -554,7 +607,7 @@ export default function TasksTable() {
         control={<Switch checked={dense} onChange={handleChangeDense} />}
         label="Dense padding"
       />
-      <CreateTask />
+      <CreateResource />
     </div>
   );
 }
