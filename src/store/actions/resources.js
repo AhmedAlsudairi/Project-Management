@@ -23,15 +23,11 @@ export const fetchResourcesFail = (error) => {
     }
 }
 
-export const fetchResources = (projectID, token) => {
+export const fetchResources = () => {
     return dispatch => {
         dispatch(fetchResourcesStart());
 
-        axios.get(`/project/Resources?pID=${projectID}`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
+        axios.get(`/project/Resources?pID=${projectID}`)
         .then(res => {
             let fechedResources = [...res.data.Resources];
             console.log(fechedResources);
