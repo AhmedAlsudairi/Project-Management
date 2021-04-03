@@ -86,18 +86,13 @@ export const createTaskInProject = (name,duration,start,finish,resources) => {
     }
 }
 
-export const removeTaskFromProject = (projectID,TaskID, token) => {
-    console.log(token);
+export const removeTaskFromProject = (id) => {
     return dispatch => {
         dispatch(fetchTasksStart());
 
-        axios.delete(`/Task?aID=${TaskID}&pID=${projectID}`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
+        axios.delete(`/Task?ID=${id}`)
         .then(res => {
-            dispatch(fetchTasks(projectID,token));
+            dispatch(fetchTasks());
         })
         .catch(err=>{
             dispatch(fetchTasksFail(err));
