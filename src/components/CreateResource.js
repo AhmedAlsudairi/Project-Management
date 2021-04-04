@@ -11,6 +11,8 @@ import {
   Typography,
 } from "@material-ui/core";
 import React, { useState } from "react";
+import * as resourcesActions from "../store/actions/resources";
+import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -31,16 +33,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function CreateResource() {
+function CreateResource(props) {
   const classes = useStyles();
   const [name, setName] = useState({ value: "", valid: false });
   const [type, setType] = useState({ value: "", valid: false });
   const [max, setMax] = useState({ value: "", valid: false });
   const [stRate, setStRate] = useState({ value: "", valid: false });
 
-  const handleCreateTask = (e) => {
+  const handleCreateResource = (e) => {
     e.preventDefault();
-    console.log("task created");
+    console.log("resource created");
+
+    props.onCreateResource(name.value, type.value, material, max.value, stRate.value, ovt, cost, tasks)
   };
 
   const handleNameChange = (e) => {
@@ -127,7 +131,7 @@ function CreateResource() {
         />
 
         <Button
-          onClick={handleCreateTask}
+          onClick={handleCreateResource}
           variant="contained"
           color="primary"
           type={"submit"}
@@ -140,4 +144,13 @@ function CreateResource() {
   );
 }
 
-export default CreateResource;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onCreateResource: (name, type, material=null, max, rate, ovt=null, cost=null, tasks=null) =>
+      dispatch(
+        resourcesActions.createResourceInProject(name, type, material, max, rate, ovt, cost, tasks)
+      ),
+  };
+};
+
+export default connect(null, mapDispatchToProps)(CreateResource);
