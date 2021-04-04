@@ -41,7 +41,7 @@ function CreateTask(props) {
       finish: getFinishDate(start.value, duration.value),
     };
     console.log(task);
-
+    var resources =null;
     props.onCreateTask(task.name,task.duration,task.start,task.finish,resources)
   };
 

@@ -27,7 +27,7 @@ export const fetchResources = () => {
     return dispatch => {
         dispatch(fetchResourcesStart());
 
-        axios.get(`/project/Resources?pID=${projectID}`)
+        axios.get(`/project/Resources`)
             .then(res => {
                 let fechedResources = [...res.data.Resources];
                 console.log(fechedResources);

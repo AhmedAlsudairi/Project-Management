@@ -43,7 +43,10 @@ function CreateResource(props) {
   const handleCreateResource = (e) => {
     e.preventDefault();
     console.log("resource created");
-
+    var material =null;
+    var ovt =null;
+    var cost =null;
+    var tasks =null;
     props.onCreateResource(name.value, type.value, material, max.value, stRate.value, ovt, cost, tasks)
   };
 
