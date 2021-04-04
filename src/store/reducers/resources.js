@@ -35,12 +35,12 @@ const createResourceFail = (state, action) => {
 
 const resourcesReducer = (state = initalState, action) => {
     switch (action.type) {
-        case actionTypes.FETCH_ResourceS_START: return resourcesStart(state, action);
-        case actionTypes.FETCH_ResourceS_SUCCESS: return resourcesSuccess(state, action);
-        case actionTypes.FETCH_ResourceS_FAIL: return resourcesFail(state, action);
-        case actionTypes.CREATE_Resource_START: return createResourceStart(state, action);
-        case actionTypes.CREATE_Resource_SUCCESS: return createResourceSuccess(state, action);
-        case actionTypes.CREATE_Resource_FAIL: return createResourceFail(state, action);
+        case actionTypes.FETCH_RESOURCES_START: return resourcesStart(state, action);
+        case actionTypes.FETCH_RESOURCES_SUCCESS: return resourcesSuccess(state, action);
+        case actionTypes.FETCH_RESOURCES_FAIL: return resourcesFail(state, action);
+        case actionTypes.CREATE_RESOURCE_START: return createResourceStart(state, action);
+        case actionTypes.CREATE_RESOURCE_SUCCESS: return createResourceSuccess(state, action);
+        case actionTypes.CREATE_RESOURCE_FAIL: return createResourceFail(state, action);
         default: return state;
     }
 }
