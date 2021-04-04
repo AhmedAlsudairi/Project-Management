@@ -300,7 +300,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ResourcesTable(props) {
+function ResourcesTable(props) {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
@@ -636,4 +636,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreateResource);
+export default connect(mapStateToProps, mapDispatchToProps)(ResourcesTable);

@@ -24,6 +24,8 @@ import SaveIcon from "@material-ui/icons/Save";
 import CloseIcon from "@material-ui/icons/Close";
 import { InputAdornment, TextField } from "@material-ui/core";
 import CreateTask from "./CreateTask";
+import * as tasksActions from "../store/actions/tasks";
+import { connect } from "react-redux";
 
 const rows = [
   {
@@ -265,7 +267,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function TasksTable() {
+function TasksTable(props) {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
@@ -375,9 +377,11 @@ export default function TasksTable() {
   };
   const handleDelete = (id) => {
     console.log("Delete: ", id);
+    props.onDeleteTask(id);
   };
   const handleSave = (row) => {
     console.log("save: ", row);
+    props.onModifyTask();
   };
   const handleDisabledSaveBtn = () => {
     if (
@@ -558,3 +562,25 @@ export default function TasksTable() {
     </div>
   );
 }
+
+const mapStateToProps = (state) => {
+  return {
+    tasks: state.tasks.tasks,
+
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onDeleteTask: (id) =>
+      dispatch(
+        tasksActions.removeTaskFromProject(id)
+      ),
+    onModifyTask: (id,name,duration,start,finish,resources) =>
+      dispatch(
+        tasksActions.modifyTaskInProject(id,name,duration,start,finish,resources)
+      ),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(TasksTable);
