@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import PropTypes from "prop-types";
 // import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
@@ -316,6 +316,10 @@ function ResourcesTable(props) {
     changed: false,
   });
 
+  useEffect(()=>{
+    props.onFetchResources();
+  },[])
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -625,6 +629,10 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    onFetchResources: () =>
+      dispatch(
+      resourcesActions.fetchResources()
+    ),
     onDeleteResource: (id) =>
       dispatch(
         resourcesActions.removeResourceFromProject(id)
