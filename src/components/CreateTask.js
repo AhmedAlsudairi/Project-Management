@@ -8,7 +8,7 @@ import {
 } from "@material-ui/core";
 import React, { useState } from "react";
 import * as tasksActions from "../store/actions/tasks";
-
+import { connect } from "react-redux";
 const useStyles = makeStyles((theme) => ({
   paper: {
     width: "100%",
@@ -138,8 +138,6 @@ function CreateTask() {
     </Paper>
   );
 }
-
-export default CreateTask;
 
 const mapDispatchToProps = (dispatch) => {
   return {

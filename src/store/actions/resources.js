@@ -1,6 +1,6 @@
 import * as actionTypes from './actionsTypes';
 import axios from 'axios';
-import download from 'downloadjs';
+// import download from 'downloadjs';
 //
 
 export const fetchResourcesStart = () => {
