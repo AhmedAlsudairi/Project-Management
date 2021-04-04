@@ -7,6 +7,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import React, { useState } from "react";
+import * as tasksActions from "../store/actions/tasks";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -139,3 +140,14 @@ function CreateTask() {
 }
 
 export default CreateTask;
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onCreateTask: (name,duration,start,finish,resources) =>
+      dispatch(
+        tasksActions.createTaskInProject(name,duration,start,finish,resources)
+      ),
+  };
+};
+
+export default connect(null, mapDispatchToProps)(CreateTask);
