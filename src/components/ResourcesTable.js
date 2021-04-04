@@ -31,6 +31,8 @@ import {
   TextField,
 } from "@material-ui/core";
 import CreateResource from "./CreateResource";
+import * as resourcesActions from "../store/actions/resources";
+import { connect } from "react-redux";
 
 const rows = [
   {
@@ -611,3 +613,25 @@ export default function ResourcesTable() {
     </div>
   );
 }
+
+const mapStateToProps = (state) => {
+  return {
+    resources: state.resources.resources,
+
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onDeleteResource: (id) =>
+      dispatch(
+        resourcesActions.removeResourceFromProject(id)
+      ),
+    onModifyResource: (id, name, type, material=null, max, rate, ovt=null, cost=null, tasks=null) =>
+      dispatch(
+        resourcesActions.modifyResourceInProject(id, name, type, material, max, rate, ovt, cost, tasks)
+      ),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(CreateResource);
