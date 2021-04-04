@@ -300,7 +300,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ResourcesTable() {
+export default function ResourcesTable(props) {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
@@ -388,11 +388,13 @@ export default function ResourcesTable() {
     if (id === currentResource.id) return true;
     else return false;
   };
-  const handleDelete = (name) => {
-    console.log("Delete: ", name);
+  const handleDelete = (id) => {
+    console.log("Delete: ", id);
+    props.onDeleteResource(id);
   };
   const handleSave = (row) => {
     console.log("save: ", row);
+    props.onModifyResource()
   };
   const handleDisabledSaveBtn = () => {
     if (
