@@ -13,7 +13,7 @@ const resourcesStart = (state, action) => {
 }
 
 const resourcesSuccess = (state, action) => {
-    return { ...state, ...{  error: null, Resources: [ ...action.Resources ]} };
+    return { ...state, ...{  error: null, resources: [ ...action.resources ]} };
 }
 
 const resourcesFail = (state, action) => {

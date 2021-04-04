@@ -7,7 +7,8 @@ import { createStore, applyMiddleware, compose, combineReducers } from "redux";
 import { Provider } from "react-redux";
 import tasksReducer from "./store/reducers/tasks";
 import resourcesReducer from "./store/reducers/resources";
-
+import thunk from "redux-thunk";
+import axios from "axios";
 const rootReducer = combineReducers({
   tasks: tasksReducer,
   resources: resourcesReducer,

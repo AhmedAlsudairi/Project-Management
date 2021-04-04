@@ -1,22 +1,22 @@
 import * as actionTypes from '../actions/actionsTypes';
 
 const initalState = {
-    Tasks: [],
+    tasks: [],
     loading: true,
     error: null,
     selectedTask: null,
     isTaskExist: false
 }
 
-const TasksStart = (state, action) => {
+const tasksStart = (state, action) => {
     return { ...state, ...{  error: null, isTaskExist: false } };
 }
 
-const TasksSuccess = (state, action) => {
-    return { ...state, ...{  error: null, Tasks: [ ...action.Tasks ]} };
+const tasksSuccess = (state, action) => {
+    return { ...state, ...{  error: null, tasks: [ ...action.tasks ]} };
 }
 
-const TasksFail = (state, action) => {
+const tasksFail = (state, action) => {
     return { ...state, ...{ error: action.error} };
 }
 
@@ -35,9 +35,9 @@ const createTaskFail = (state, action) => {
 
 const TasksReducer = (state = initalState, action) => {
     switch (action.type) {
-        case actionTypes.FETCH_TASKS_START: return TasksStart(state, action);
-        case actionTypes.FETCH_TASKS_SUCCESS: return TasksSuccess(state, action);
-        case actionTypes.FETCH_TASKS_FAIL: return TasksFail(state, action);
+        case actionTypes.FETCH_TASKS_START: return tasksStart(state, action);
+        case actionTypes.FETCH_TASKS_SUCCESS: return tasksSuccess(state, action);
+        case actionTypes.FETCH_TASKS_FAIL: return tasksFail(state, action);
         case actionTypes.CREATE_TASK_START: return createTaskStart(state, action);
         case actionTypes.CREATE_TASK_SUCCESS: return createTaskSuccess(state, action);
         case actionTypes.CREATE_TASK_FAIL: return createTaskFail(state, action);
