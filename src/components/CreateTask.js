@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function CreateTask() {
+function CreateTask(props) {
   const classes = useStyles();
   const [ID, setID] = useState({ value: "", valid: false });
   const [name, setName] = useState({ value: "", valid: false });
@@ -41,6 +41,8 @@ function CreateTask() {
       finish: getFinishDate(start.value, duration.value),
     };
     console.log(task);
+
+    props.onCreateTask(task.name,task.duration,task.start,task.finish,resources)
   };
 
   const getFinishDate = (start, duration) => {
@@ -141,7 +143,7 @@ function CreateTask() {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onCreateTask: (name,duration,start,finish,resources) =>
+    onCreateTask: (name,duration,start,finish,resources=null) =>
       dispatch(
         tasksActions.createTaskInProject(name,duration,start,finish,resources)
       ),
