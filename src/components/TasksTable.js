@@ -284,10 +284,10 @@ function TasksTable(props) {
     changed: false,
   });
 
-  useEffect(()=>{
+  useEffect(() => {
     props.onFetchTasks();
-  },[])
-  
+  }, []);
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -570,23 +570,23 @@ function TasksTable(props) {
 const mapStateToProps = (state) => {
   return {
     tasks: state.tasks.tasks,
-
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onFetchTasks: () =>
-    dispatch(
-      tasksActions.fetchTasks()
-    ),
-    onDeleteTask: (id) =>
+    onFetchTasks: () => dispatch(tasksActions.fetchTasks()),
+    onDeleteTask: (id) => dispatch(tasksActions.removeTaskFromProject(id)),
+    onModifyTask: (id, name, duration, start, finish, resources) =>
       dispatch(
-        tasksActions.removeTaskFromProject(id)
-      ),
-    onModifyTask: (id,name,duration,start,finish,resources) =>
-      dispatch(
-        tasksActions.modifyTaskInProject(id,name,duration,start,finish,resources)
+        tasksActions.modifyTaskInProject(
+          id,
+          name,
+          duration,
+          start,
+          finish,
+          resources
+        )
       ),
   };
 };

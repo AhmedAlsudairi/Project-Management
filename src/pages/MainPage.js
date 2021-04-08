@@ -6,6 +6,7 @@ import Typography from "@material-ui/core/Typography";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import ResourcesTable from "../components/ResourcesTable";
+import Reports from "../components/Reports";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,7 +42,9 @@ function MainPage() {
         <Grid item xs={2}></Grid>
       </Grid>
       <Grid container justify="center">
-        <Grid item xs="2"></Grid>
+        <Grid item xs="2">
+          <Reports />
+        </Grid>
         <Grid item xs="8">
           <Tabs
             value={value}
