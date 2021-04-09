@@ -577,15 +577,10 @@ const mapDispatchToProps = (dispatch) => {
   return {
     onFetchTasks: () => dispatch(tasksActions.fetchTasks()),
     onDeleteTask: (id) => dispatch(tasksActions.removeTaskFromProject(id)),
-    onModifyTask: (id, name, duration, start, finish, resources) =>
+    onModifyTask: (id,name,duration,start,finish) =>
       dispatch(
         tasksActions.modifyTaskInProject(
-          id,
-          name,
-          duration,
-          start,
-          finish,
-          resources
+          id,name,duration,start,finish
         )
       ),
   };

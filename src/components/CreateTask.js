@@ -41,8 +41,7 @@ function CreateTask(props) {
       finish: getFinishDate(start.value, duration.value),
     };
     console.log(task);
-    var resources =null;
-    props.onCreateTask(task.name,task.duration,task.start,task.finish,resources)
+    props.onCreateTask(task.name,task.duration,task.start,task.finish)
   };
 
   const getFinishDate = (start, duration) => {
@@ -143,9 +142,9 @@ function CreateTask(props) {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onCreateTask: (name,duration,start,finish,resources=null) =>
+    onCreateTask: (name,duration,start,finish) =>
       dispatch(
-        tasksActions.createTaskInProject(name,duration,start,finish,resources)
+        tasksActions.createTaskInProject(name,duration,start,finish)
       ),
   };
 };

@@ -43,11 +43,7 @@ function CreateResource(props) {
   const handleCreateResource = (e) => {
     e.preventDefault();
     console.log("resource created");
-    var material =null;
-    var ovt =null;
-    var cost =null;
-    var tasks =null;
-    props.onCreateResource(name.value, type.value, material, max.value, stRate.value, ovt, cost, tasks)
+    props.onCreateResource(name.value, type.value, max.value, stRate.value)
   };
 
   const handleNameChange = (e) => {
@@ -149,9 +145,9 @@ function CreateResource(props) {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onCreateResource: (name, type, material=null, max, rate, ovt=null, cost=null, tasks=null) =>
+    onCreateResource: (name, type, max, rate) =>
       dispatch(
-        resourcesActions.createResourceInProject(name, type, material, max, rate, ovt, cost, tasks)
+        resourcesActions.createResourceInProject(name, type, max, rate)
       ),
   };
 };
