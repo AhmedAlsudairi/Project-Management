@@ -68,29 +68,34 @@ def create_resource():
         'resource': resource.format()
     })
 
-@app.route('/assign_resource', methods=['POST'])
-def assign_resource():
+@app.route('/assign_resource/<string:task_id>', methods=['POST'])
+def assign_resource(task_id):
     if request.get_json() is None:
         abort(422)
     body = request.get_json()
 
-    if 'task_id' not in body or 'resources' not in body:
+    if 'resource_id' not in body:
         abort(422)
 
-    task_id = body.get('task_id')
-    resources = body.get('resources')
-    if isinstance(resources, list):
-        for resource in resources:
-            tasks_resources = Tasks_Resources(task_id, resource, None)
-            tasks_resources.insert()
-    else:
+    resource_id = body.get('resource_id')
+    resource = Resource.query.get(resource_id)
+    task = Task.query.get(task_id)
+    if task is None or resource is None:
+        abort(404)
+    cost = resource.rate * (task.duration * 8)
+
+    try:
+        task_resource = Tasks_Resources(task_id, resource_id, cost)
+        task_resource.insert()
+    
+    except:
         abort(422)
 
     return jsonify({
         'success': True,
     })
 
-@app.route('/tasks/<int:id>', methods=['PATCH'])
+@app.route('/tasks/<string:id>', methods=['PATCH'])
 def modify_task(id):
     if id is None:
         abort(422)
@@ -154,23 +159,16 @@ def modify_resource(name):
         'resource': resource.format()
     })
 
-@app.route('/assign_resource/<int:task_id>', methods=['PATCH'])
-def modify_assign_resource(task_id):
-    if request.get_json() is None:
+@app.route('/assign_resource/<string:task_id>', methods=['DELETE'])
+def delete_assign_resource(task_id):
+    resource_id = request.args.get('resource_id', None, type=str)
+
+    if 'task_id' is None or 'resource_id' is None:
         abort(422)
-    body = request.get_json()
-
-    if 'old_resources' not in body or 'new_resources' not in body:
-        return abort(422)
-
-    old_resources = body.get('old_resources')
-    new_resources = body.get('new_resources')
-    for old_resource in old_resources:
-        task_resources = Tasks_Resources.query.get((task_id, old_resource))
-        if new_resources is not None:
-            task_resources.resource_name = new_resources.pop(0)
-        task_resources.update()
-        
+    task_resource = Tasks_Resources.query.get((task_id, resource_id))
+    if task_resource is None:
+        abort(404)
+    task_resource.delete()
 
     return jsonify({
         'success': True
@@ -198,4 +196,57 @@ def get_report():
     return jsonify({
         'success': True,
         'report': [task.format_report() for task in tasks]
+    })
+
+@app.route('/report_task', methods=['GET'])
+def get_report_task():
+    tasks = Task.query.all()
+    data = []
+    for task in tasks:
+        task_resources = Tasks_Resources.query.filter_by(task_id = task.id).all()
+        resources = []
+        total_cost = 0
+        for task_resource in task_resources:
+            resources.append(task_resource.resource.name)
+            total_cost = task_resource.total_cost + total_cost
+        data.append({
+            'task_name': task_resource.task.name,
+            'task_duration': task_resource.task.duration,
+            'task_start': task_resource.task.start,
+            'task_finish': task_resource.task.finish,
+            'resources': resources,
+            'total_cost': total_cost
+        })
+
+    return jsonify({
+        'success': True,
+        'report': data
+    })
+
+@app.route('/report_project', methods=['GET'])
+def get_report_project():
+    tasks = Task.query.all()
+    data = []
+    project_total_cost = 0
+    for task in tasks:
+        task_resources = Tasks_Resources.query.filter_by(task_id = task.id).all()
+        resources = []
+        total_cost = 0
+        for task_resource in task_resources:
+            resources.append(task_resource.resource.name)
+            total_cost = task_resource.total_cost + total_cost
+        data.append({
+            'task_name': task_resource.task.name,
+            'task_duration': task_resource.task.duration,
+            'task_start': task_resource.task.start,
+            'task_finish': task_resource.task.finish,
+            'resources': resources,
+            'total_cost': total_cost
+        })
+        project_total_cost += total_cost 
+    
+    return jsonify({
+        'success': True,
+        'report': data,
+        'project_total_cost': project_total_cost
     })
