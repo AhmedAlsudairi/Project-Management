@@ -296,7 +296,7 @@ function TasksTable(props) {
 
   // const handleSelectAllClick = (event) => {
   //   if (event.target.checked) {
-  //     const newSelecteds = rows.map((n) => n.id);
+  //     const newSelecteds = props.tasks.map((n) => n.id);
   //     setSelected(newSelecteds);
   //     return;
   //   }
@@ -315,14 +315,14 @@ function TasksTable(props) {
     y = date.getFullYear();
     return y + "-" + mm + "-" + dd;
   };
-  const handleClick = (event, row) => {
-    if (row.id !== currentTask.id) {
+  const handleClick = (event, task) => {
+    if (task.id !== currentTask.id) {
       setCurrentTask({
-        id: row.id,
-        name: row.name,
-        duration: row.duration,
-        start: row.start,
-        finish: row.finish,
+        id: task.id,
+        name: task.name,
+        duration: task.duration,
+        start: task.start,
+        finish: task.finish,
         changed: false,
       });
     }
@@ -373,7 +373,7 @@ function TasksTable(props) {
   // const isSelected = (id) => selected.indexOf(id) !== -1;
 
   const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+    rowsPerPage - Math.min(rowsPerPage, props.tasks.length - page * rowsPerPage);
 
   const taskSelected = (id) => {
     if (id === currentTask.id) return true;
@@ -383,8 +383,8 @@ function TasksTable(props) {
     console.log("Delete: ", id);
     props.onDeleteTask(id);
   };
-  const handleSave = (row) => {
-    console.log("save: ", row);
+  const handleSave = (task) => {
+    console.log("save: ", task);
     props.onModifyTask();
   };
   const handleDisabledSaveBtn = () => {
@@ -398,14 +398,14 @@ function TasksTable(props) {
       return true;
     else return false;
   };
-  const handleDiscard = (row) => {
-    console.log("discard: ", row);
+  const handleDiscard = (task) => {
+    console.log("discard: ", task);
     setCurrentTask({
-      id: row.id,
-      name: row.name,
-      duration: row.duration,
-      start: row.start,
-      finish: row.finish,
+      id: task.id,
+      name: task.name,
+      duration: task.duration,
+      start: task.start,
+      finish: task.finish,
       changed: false,
     });
   };
@@ -430,23 +430,23 @@ function TasksTable(props) {
               orderBy={orderBy}
               // onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={rows.length}
+              rowCount={props.tasks.length}
             />
             <TableBody>
-              {stableSort(rows, getComparator(order, orderBy))
+              {stableSort(props.tasks, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  // const isItemSelected = isSelected(row.id);
+                .map((task, index) => {
+                  // const isItemSelected = isSelected(task.id);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row)}
+                      onClick={(event) => handleClick(event, task)}
                       role="checkbox"
                       // aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.id}
+                      key={task.id}
                       // selected={isItemSelected}
                     >
                       {/* <TableCell padding="checkbox">
@@ -455,11 +455,11 @@ function TasksTable(props) {
                           inputProps={{ "aria-labelledby": labelId }}
                         />
                       </TableCell> */}
-                      <TableCell id={labelId}>{row.id}</TableCell>
+                      <TableCell id={labelId}>{task.id}</TableCell>
                       <TableCell>
                         <TextField
                           value={
-                            taskSelected(row.id) ? currentTask.name : row.name
+                            taskSelected(task.id) ? currentTask.name : task.name
                           }
                           onChange={handleNameChange}
                         />
@@ -467,9 +467,9 @@ function TasksTable(props) {
                       <TableCell>
                         <TextField
                           value={
-                            taskSelected(row.id)
+                            taskSelected(task.id)
                               ? currentTask.duration
-                              : row.duration
+                              : task.duration
                           }
                           onChange={handleDurationChange}
                           InputProps={{
@@ -486,7 +486,7 @@ function TasksTable(props) {
                           id="date"
                           type="date"
                           value={
-                            taskSelected(row.id) ? currentTask.start : row.start
+                            taskSelected(task.id) ? currentTask.start : task.start
                           }
                           onChange={handleStartChange}
                           InputLabelProps={{
@@ -497,21 +497,21 @@ function TasksTable(props) {
                       <TableCell>
                         <TextField
                           value={
-                            taskSelected(row.id)
+                            taskSelected(task.id)
                               ? currentTask.finish
-                              : row.finish
+                              : task.finish
                           }
                           onChange={handleFinishChange}
                           disabled
                         />
                       </TableCell>
                       <TableCell>
-                        {currentTask.changed && taskSelected(row.id) ? (
+                        {currentTask.changed && taskSelected(task.id) ? (
                           <React.Fragment>
                             <Tooltip title="Save">
                               <IconButton
                                 aria-label="Save"
-                                onClick={() => handleSave(row)}
+                                onClick={() => handleSave(task)}
                                 disabled={!handleDisabledSaveBtn()}
                               >
                                 <SaveIcon />{" "}
@@ -520,7 +520,7 @@ function TasksTable(props) {
                             <Tooltip title="Discard">
                               <IconButton
                                 aria-label="Discard"
-                                onClick={() => handleDiscard(row)}
+                                onClick={() => handleDiscard(task)}
                               >
                                 <CloseIcon />
                               </IconButton>
@@ -530,7 +530,7 @@ function TasksTable(props) {
                           <Tooltip title="Delete">
                             <IconButton
                               aria-label="delete"
-                              onClick={() => handleDelete(row.id)}
+                              onClick={() => handleDelete(task.id)}
                             >
                               <DeleteIcon />
                             </IconButton>
@@ -551,7 +551,7 @@ function TasksTable(props) {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={rows.length}
+          count={props.tasks.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onChangePage={handleChangePage}
