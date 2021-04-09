@@ -29,6 +29,10 @@ class Task(db.Model):
         db.session.commit()
 
     def update(self):
+        task_resources = Tasks_Resources.query.filter_by(task_id = self.id).all()
+        for task_resource in task_resources:
+            task_resource.total_cost = (task_resource.task.duration*8) * task_resource.resource.rate
+            task_resource.update()
         db.session.commit()
 
     def delete(self):
@@ -77,6 +81,10 @@ class Resource(db.Model):
         db.session.commit()
 
     def update(self):
+        task_resources = Tasks_Resources.query.filter_by(resource_id = self.id).all()
+        for task_resource in task_resources:
+            task_resource.total_cost = (task_resource.task.duration*8) * task_resource.resource.rate
+            task_resource.update()
         db.session.commit()
 
     def delete(self):
@@ -85,6 +93,7 @@ class Resource(db.Model):
 
     def format(self):
         return {
+            'id': self.id,
             'name': self.name,
             'type': self.type,
             'max': self.max,
