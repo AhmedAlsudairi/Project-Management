@@ -21,8 +21,8 @@ class Task(db.Model):
         self.id  = generateID(name)
         self.name = name
         self.duration = duration
-        self.start = datetime.strptime(start, '%d/%m/%Y')
-        self.finish = datetime.strptime(finish, '%d/%m/%Y')
+        self.start = datetime.strptime(start, '%Y-%m-%d')
+        self.finish = datetime.strptime(finish, '%Y-%m-%d')
 
     def insert(self):
         db.session.add(self)
