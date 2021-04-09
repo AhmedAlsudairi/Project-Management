@@ -159,6 +159,32 @@ def modify_resource(id):
         'resource': resource.format()
     })
 
+@app.route('/tasks/<string:id>', methods=['DELETE'])
+def delete_task(id):
+    if id is None:
+        abort(422)
+    task = Task.query.get(id)
+    if task is None:
+        abort(404)
+    task.delete()
+
+    return jsonify({
+        'success': True
+    })
+
+@app.route('/resources/<string:id>', methods=['DELETE'])
+def delete_resource(id):
+    if id is None:
+        abort(422)
+    resource = Resource.query.get(id)
+    if resource is None:
+        abort(404)
+    resource.delete()
+
+    return jsonify({
+        'success': True
+    })
+
 @app.route('/assign_resource/<string:task_id>', methods=['DELETE'])
 def delete_assign_resource(task_id):
     resource_id = request.args.get('resource_id', None, type=str)
@@ -173,6 +199,7 @@ def delete_assign_resource(task_id):
     return jsonify({
         'success': True
     })
+
 
 @app.route('/tasks', methods=['GET'])
 def get_tasks():
