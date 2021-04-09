@@ -128,27 +128,27 @@ def modify_task(id):
         'task': task.format()
     })
 
-@app.route('/resources/<string:name>', methods=['PATCH'])
-def modify_resource(name):
-    if name is None:
+@app.route('/resources/<string:id>', methods=['PATCH'])
+def modify_resource(id):
+    if id is None:
         abort(422)
 
     if request.get_json() is None:
         abort(422)
     body = request.get_json()
 
-    if 'new_name' not in body or 'type' not in body or 'max' not in body or 'rate' not in body:
+    if 'name' not in body or 'type' not in body or 'max' not in body or 'rate' not in body:
         return abort(422)
 
-    new_name = body.get('new_name')
+    name = body.get('name')
     type = body.get('type')
     max = body.get('max')
     rate = body.get('rate')
 
-    resource = Resource.query.get(name)
+    resource = Resource.query.get(id)
     if resource is None:
         abort(404)
-    resource.name = new_name
+    resource.name = name
     resource.type = type
     resource.max = max
     resource.rate = rate
@@ -210,10 +210,10 @@ def get_report_task():
             resources.append(task_resource.resource.name)
             total_cost = task_resource.total_cost + total_cost
         data.append({
-            'task_name': task_resource.task.name,
-            'task_duration': task_resource.task.duration,
-            'task_start': task_resource.task.start,
-            'task_finish': task_resource.task.finish,
+            'task_name': task.name,
+            'task_duration': task.duration,
+            'task_start': task.start,
+            'task_finish': task.finish,
             'resources': resources,
             'total_cost': total_cost
         })
@@ -236,10 +236,10 @@ def get_report_project():
             resources.append(task_resource.resource.name)
             total_cost = task_resource.total_cost + total_cost
         data.append({
-            'task_name': task_resource.task.name,
-            'task_duration': task_resource.task.duration,
-            'task_start': task_resource.task.start,
-            'task_finish': task_resource.task.finish,
+            'task_name': task.name,
+            'task_duration': task.duration,
+            'task_start': task.start,
+            'task_finish': task.finish,
             'resources': resources,
             'total_cost': total_cost
         })
