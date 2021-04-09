@@ -41,7 +41,7 @@ const rows = [
     type: "work",
     material: "",
     max: "100",
-    stRate: "15",
+    rate: "15",
     ovt: "",
     cost: "",
   },
@@ -51,7 +51,7 @@ const rows = [
     type: "work",
     material: "",
     max: "100",
-    stRate: "15",
+    rate: "15",
     ovt: "",
     cost: "",
   },
@@ -61,7 +61,7 @@ const rows = [
     type: "work",
     material: "",
     max: "100",
-    stRate: "15",
+    rate: "15",
     ovt: "",
     cost: "",
   },
@@ -71,7 +71,7 @@ const rows = [
     type: "work",
     material: "",
     max: "100",
-    stRate: "15",
+    rate: "15",
     ovt: "",
     cost: "",
   },
@@ -81,7 +81,7 @@ const rows = [
     type: "work",
     material: "",
     max: "100",
-    stRate: "15",
+    rate: "15",
     ovt: "",
     cost: "",
   },
@@ -124,7 +124,7 @@ const headCells = [
     label: "Max (No. of Resource)",
   },
   {
-    id: "stRate",
+    id: "rate",
     numeric: false,
     disablePadding: true,
     label: "St.Rate",
@@ -312,7 +312,7 @@ function ResourcesTable(props) {
     name: "",
     type: "",
     max: "",
-    stRate: "",
+    rate: "",
     changed: false,
   });
 
@@ -335,14 +335,14 @@ function ResourcesTable(props) {
   //   setSelected([]);
   // };
 
-  const handleClick = (event, row) => {
-    if (row.id !== currentResource.id)
+  const handleClick = (event, resource) => {
+    if (resource.id !== currentResource.id)
       setCurrentResource({
-        id: row.id,
-        name: row.name,
-        type: row.type,
-        max: row.max,
-        stRate: row.stRate,
+        id: resource.id,
+        name: resource.name,
+        type: resource.type,
+        max: resource.max,
+        rate: resource.rate,
         changed: false,
       });
   };
@@ -365,7 +365,7 @@ function ResourcesTable(props) {
     if (isNaN(newStRate)) return;
     setCurrentResource({
       ...currentResource,
-      stRate: newStRate,
+      rate: newStRate,
       changed: true,
     });
   };
@@ -386,7 +386,7 @@ function ResourcesTable(props) {
   // const isSelected = (id) => selected.indexOf(id) !== -1;
 
   const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+    rowsPerPage - Math.min(rowsPerPage, props.resources.length - page * rowsPerPage);
 
   const isResourceSelected = (id) => {
     if (id === currentResource.id) return true;
@@ -396,8 +396,8 @@ function ResourcesTable(props) {
     console.log("Delete: ", id);
     props.onDeleteResource(id);
   };
-  const handleSave = (row) => {
-    console.log("save: ", row);
+  const handleSave = (resource) => {
+    console.log("save: ", resource);
     props.onModifyResource()
   };
   const handleDisabledSaveBtn = () => {
@@ -405,19 +405,19 @@ function ResourcesTable(props) {
       currentResource.name.length > 0 &&
       currentResource.max.length > 0 &&
       currentResource.type.length > 0 &&
-      currentResource.stRate.length > 0
+      currentResource.rate.length > 0
     )
       return true;
     else return false;
   };
-  const handleDiscard = (row) => {
-    console.log("discard: ", row);
+  const handleDiscard = (resource) => {
+    console.log("discard: ", resource);
     setCurrentResource({
-      id: row.id,
-      name: row.name,
-      type: row.type,
-      max: row.max,
-      stRate: row.stRate,
+      id: resource.id,
+      name: resource.name,
+      type: resource.type,
+      max: resource.max,
+      rate: resource.rate,
       changed: false,
     });
   };
@@ -442,30 +442,30 @@ function ResourcesTable(props) {
               orderBy={orderBy}
               // onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={rows.length}
+              rowCount={props.resources.length}
             />
             <TableBody>
-              {stableSort(rows, getComparator(order, orderBy))
+              {stableSort(props.resources, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  // const isItemSelected = isSelected(row.id);
+                .map((resource, index) => {
+                  // const isItemSelected = isSelected(resource.id);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row)}
-                      key={row.name}
+                      onClick={(event) => handleClick(event, resource)}
+                      key={resource.name}
                     >
                       {/* <TableCell component="th" id={labelId}>
-                        {row.id}
+                        {resource.id}
                       </TableCell> */}
                       <TableCell>
                         <TextField
                           value={
-                            isResourceSelected(row.id)
+                            isResourceSelected(resource.id)
                               ? currentResource.name
-                              : row.name
+                              : resource.name
                           }
                           onChange={handleNameChange}
                         />
@@ -476,9 +476,9 @@ function ResourcesTable(props) {
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
                             value={
-                              isResourceSelected(row.id)
+                              isResourceSelected(resource.id)
                                 ? currentResource.type
-                                : row.type
+                                : resource.type
                             }
                             onChange={handleTypeChange}
                           >
@@ -489,7 +489,7 @@ function ResourcesTable(props) {
                         </FormControl>
                         {/* <TextField
                           value={
-                            isResourceSelected(row.id) ? currentResource.type : row.type
+                            isResourceSelected(resource.id) ? currentResource.type : resource.type
                           }
                           //   onChange={handleDurationChange}
                         /> */}
@@ -498,18 +498,18 @@ function ResourcesTable(props) {
                         <TextField
                           disabled
                           value={
-                            isResourceSelected(row.id)
+                            isResourceSelected(resource.id)
                               ? currentResource.material
-                              : row.material
+                              : resource.material
                           }
                         />
                       </TableCell>
                       <TableCell>
                         <TextField
                           value={
-                            isResourceSelected(row.id)
+                            isResourceSelected(resource.id)
                               ? currentResource.max
-                              : row.max
+                              : resource.max
                           }
                           InputProps={{
                             endAdornment: (
@@ -522,9 +522,9 @@ function ResourcesTable(props) {
                       <TableCell>
                         <TextField
                           value={
-                            isResourceSelected(row.id)
-                              ? currentResource.stRate
-                              : row.stRate
+                            isResourceSelected(resource.id)
+                              ? currentResource.rate
+                              : resource.rate
                           }
                           InputProps={{
                             endAdornment: (
@@ -538,9 +538,9 @@ function ResourcesTable(props) {
                         <TextField
                           disabled
                           value={
-                            isResourceSelected(row.id)
+                            isResourceSelected(resource.id)
                               ? currentResource.ovt
-                              : row.ovt
+                              : resource.ovt
                           }
                           //   onChange={handleStartChange}
                         />
@@ -549,9 +549,9 @@ function ResourcesTable(props) {
                         <TextField
                           disabled
                           value={
-                            isResourceSelected(row.id)
+                            isResourceSelected(resource.id)
                               ? currentResource.cost
-                              : row.cost
+                              : resource.cost
                           }
                           //   onChange={handleStartChange}
                         />
@@ -559,12 +559,12 @@ function ResourcesTable(props) {
 
                       <TableCell>
                         {currentResource.changed &&
-                        isResourceSelected(row.id) ? (
+                        isResourceSelected(resource.id) ? (
                           <React.Fragment>
                             <Tooltip title="Save">
                               <IconButton
                                 aria-label="Save"
-                                onClick={() => handleSave(row)}
+                                onClick={() => handleSave(resource)}
                                 disabled={!handleDisabledSaveBtn()}
                               >
                                 <SaveIcon />{" "}
@@ -573,7 +573,7 @@ function ResourcesTable(props) {
                             <Tooltip title="Discard">
                               <IconButton
                                 aria-label="Discard"
-                                onClick={() => handleDiscard(row)}
+                                onClick={() => handleDiscard(resource)}
                               >
                                 <CloseIcon />
                               </IconButton>
@@ -583,7 +583,7 @@ function ResourcesTable(props) {
                           <Tooltip title="Delete">
                             <IconButton
                               aria-label="delete"
-                              onClick={() => handleDelete(row.id)}
+                              onClick={() => handleDelete(resource.id)}
                             >
                               <DeleteIcon />
                             </IconButton>
@@ -604,7 +604,7 @@ function ResourcesTable(props) {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={rows.length}
+          count={props.resources.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onChangePage={handleChangePage}
@@ -637,9 +637,9 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(
         resourcesActions.removeResourceFromProject(id)
       ),
-    onModifyResource: (id, name, type, material=null, max, rate, ovt=null, cost=null, tasks=null) =>
+    onModifyResource: (id, name, type, max, rate) =>
       dispatch(
-        resourcesActions.modifyResourceInProject(id, name, type, material, max, rate, ovt, cost, tasks)
+        resourcesActions.modifyResourceInProject(id, name, type, max, rate)
       ),
   };
 };
