@@ -27,9 +27,9 @@ export const fetchResources = () => {
     return dispatch => {
         dispatch(fetchResourcesStart());
 
-        axios.get(`/project/Resources`)
+        axios.get(`/resources`)
             .then(res => {
-                let fechedResources = [...res.data.Resources];
+                let fechedResources = [...res.data.resources];
                 console.log(fechedResources);
                 dispatch(fetchResourcesSuccess(fechedResources));
 
@@ -59,22 +59,18 @@ export const createResourceFail = () => {
     }
 }
 
-export const createResourceInProject = (name, type, material, max, rate, ovt, cost, tasks) => {
+export const createResourceInProject = (name, type, max, rate) => {
     return dispatch => {
         dispatch(fetchResourcesStart());
         dispatch(createResourcestart());
         const data = {
             name: name,
             type: type,
-            material: material,
             max: max,
             rate: rate,
-            ovt: ovt,
-            cost: cost,
-            tasks: tasks,
         }
         console.log(data);
-        axios.post(`/Resource`, data)
+        axios.post(`/resources`, data)
             .then(res => {
                 dispatch(fetchResources());
                 dispatch(createResourcesuccess());
@@ -85,6 +81,7 @@ export const createResourceInProject = (name, type, material, max, rate, ovt, co
     }
 }
 
+// not implemented
 export const removeResourceFromProject = (id) => {
 
     return dispatch => {
@@ -100,24 +97,19 @@ export const removeResourceFromProject = (id) => {
     }
 }
 
-export const modifyResourceInProject = (id, name, type, material, max, rate, ovt, cost, tasks) => {
+export const modifyResourceInProject = (id, name, type, max, rate) => {
 
     return dispatch => {
         dispatch(fetchResourcesStart());
         dispatch(createResourcestart());
         const data = {
-            id: id,
             name: name,
             type: type,
-            material: material,
             max: max,
             rate: rate,
-            ovt: ovt,
-            cost: cost,
-            tasks: tasks,
         }
         console.log(data);
-        axios.patch(`/Resource`, data)
+        axios.patch(`/tasks?id=${id}`, data)
             .then(res => {
                 dispatch(fetchResources());
                 dispatch(createResourcesuccess());

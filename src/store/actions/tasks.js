@@ -27,9 +27,9 @@ export const fetchTasks = () => {
     return dispatch => {
         dispatch(fetchTasksStart());
 
-        axios.get(`/project/Tasks`)
+        axios.get(`/tasks`)
         .then(res => {
-            let fechedTasks = [...res.data.Tasks];
+            let fechedTasks = [...res.data.tasks];
             console.log(fechedTasks);
             dispatch(fetchTasksSuccess(fechedTasks));
             
@@ -59,7 +59,7 @@ export const createTaskFail = () => {
     }
 }
 
-export const createTaskInProject = (name,duration,start,finish,resources) => {
+export const createTaskInProject = (name,duration,start,finish) => {
     return dispatch => {
         dispatch(fetchTasksStart());
         dispatch(createTaskstart());
@@ -67,11 +67,10 @@ export const createTaskInProject = (name,duration,start,finish,resources) => {
             name: name,
             duration: duration,
             start: start,
-            finish: finish,
-            resources: resources,
+            finish: finish
         }
         console.log(data);
-        axios.post(`/Task`,data)
+        axios.post(`/tasks`,data)
         .then(res => {
             dispatch(fetchTasks());
             dispatch(createTasksuccess());
@@ -82,11 +81,12 @@ export const createTaskInProject = (name,duration,start,finish,resources) => {
     }
 }
 
-export const removeTaskFromProject = (id) => {
+// not implemeneted
+export const removeTaskFromProject = (id) => { 
     return dispatch => {
         dispatch(fetchTasksStart());
 
-        axios.delete(`/Task?ID=${id}`)
+        axios.delete(`/tasks?id=${id}`)
         .then(res => {
             dispatch(fetchTasks());
         })
@@ -96,7 +96,7 @@ export const removeTaskFromProject = (id) => {
     }
 }
 
-export const modifyTaskInProject = (id,name,duration,start,finish,resources) => {
+export const modifyTaskInProject = (id,name,duration,start,finish) => {
     
     return dispatch => {
         dispatch(fetchTasksStart());
@@ -106,11 +106,10 @@ export const modifyTaskInProject = (id,name,duration,start,finish,resources) => 
             name: name,
             duration: duration,
             start: start,
-            finish: finish,
-            resources: resources,
+            finish: finish
         }
         console.log(data);
-        axios.patch(`/Task`,data)
+        axios.patch(`/tasks?id=${id}`,data)
         .then(res => {
             dispatch(fetchTasks());
             dispatch(createTasksuccess());
