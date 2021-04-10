@@ -121,6 +121,27 @@ export const modifyTaskInProject = (id,name,duration,start,finish) => {
     }
 }
 
+export const assignResourceToTask = (taskID,resourceID) => {
+    console.log(taskID,resourceID);
+    return dispatch => {
+        dispatch(fetchTasksStart());
+        dispatch(createTaskstart());
+        const data= {
+            resource_id : resourceID,
+            task_id: taskID,
+        }
+        console.log(data);
+        axios.post(`/assign_resource/${taskID}`,data)
+        .then(res => {
+            dispatch(fetchTasks());
+            dispatch(createTasksuccess());
+        })
+        .catch(err=>{
+            dispatch(createTaskFail());
+        });
+    }
+}
+
 // export const exportTasks = (projectID, token) => {
 //     return dispatch => {
 //         dispatch(fetchTasksStart());
