@@ -27,43 +27,6 @@ import CreateTask from "./CreateTask";
 import * as tasksActions from "../store/actions/tasks";
 import { connect } from "react-redux";
 
-const rows = [
-  {
-    id: "123",
-    name: "task1",
-    duration: "3",
-    start: "2000-02-20",
-    finish: "2000-02-20",
-  },
-  {
-    id: "1234",
-    name: "task2",
-    duration: "3",
-    start: "2000-02-20",
-    finish: "2000-02-20",
-  },
-  {
-    id: "1235",
-    name: "task3",
-    duration: "3",
-    start: "2000-02-20",
-    finish: "2000-02-20",
-  },
-  {
-    id: "1236",
-    name: "task4",
-    duration: "3",
-    start: "2000-02-20",
-    finish: "2000-02-20",
-  },
-  {
-    id: "1237",
-    name: "task5",
-    duration: "3",
-    start: "2000-02-20",
-    finish: "2000-02-20",
-  },
-];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -104,6 +67,13 @@ const headCells = [
   { id: "finish", numeric: false, disablePadding: true, label: "Finish " },
   { id: "operations", numeric: false, disablePadding: false },
 ];
+
+function convert(str) {
+  var date = new Date(str),
+    mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+    day = ("0" + date.getDate()).slice(-2);
+  return [date.getFullYear(), mnth, day].join("-");
+}
 
 function EnhancedTableHead(props) {
   const {
@@ -486,7 +456,7 @@ function TasksTable(props) {
                           id="date"
                           type="date"
                           value={
-                            taskSelected(task.id) ? currentTask.start : task.start
+                            taskSelected(task.id) ? currentTask.start : convert(task.start)
                           }
                           onChange={handleStartChange}
                           InputLabelProps={{
@@ -499,7 +469,7 @@ function TasksTable(props) {
                           value={
                             taskSelected(task.id)
                               ? currentTask.finish
-                              : task.finish
+                              : convert(task.finish)
                           }
                           onChange={handleFinishChange}
                           disabled
