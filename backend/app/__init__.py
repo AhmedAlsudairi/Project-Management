@@ -68,7 +68,7 @@ def create_resource():
         'resource': resource.format()
     })
 
-@app.route('/assign_resource/<string:task_id>', methods=['POST'])
+@app.route('/assign_resource/<int:task_id>', methods=['POST'])
 def assign_resource(task_id):
     if request.get_json() is None:
         abort(422)
@@ -95,7 +95,7 @@ def assign_resource(task_id):
         'success': True,
     })
 
-@app.route('/tasks/<string:id>', methods=['PATCH'])
+@app.route('/tasks/<int:id>', methods=['PATCH'])
 def modify_task(id):
     if id is None:
         abort(422)
@@ -128,7 +128,7 @@ def modify_task(id):
         'task': task.format()
     })
 
-@app.route('/resources/<string:id>', methods=['PATCH'])
+@app.route('/resources/<int:id>', methods=['PATCH'])
 def modify_resource(id):
     if id is None:
         abort(422)
@@ -159,7 +159,7 @@ def modify_resource(id):
         'resource': resource.format()
     })
 
-@app.route('/tasks/<string:id>', methods=['DELETE'])
+@app.route('/tasks/<int:id>', methods=['DELETE'])
 def delete_task(id):
     if id is None:
         abort(422)
@@ -172,7 +172,7 @@ def delete_task(id):
         'success': True
     })
 
-@app.route('/resources/<string:id>', methods=['DELETE'])
+@app.route('/resources/<int:id>', methods=['DELETE'])
 def delete_resource(id):
     if id is None:
         abort(422)
@@ -185,7 +185,7 @@ def delete_resource(id):
         'success': True
     })
 
-@app.route('/assign_resource/<string:task_id>', methods=['DELETE'])
+@app.route('/assign_resource/<int:task_id>', methods=['DELETE'])
 def delete_assign_resource(task_id):
     resource_id = request.args.get('resource_id', None, type=str)
 
@@ -237,6 +237,7 @@ def get_report_task():
             resources.append(task_resource.resource.name)
             total_cost = task_resource.total_cost + total_cost
         data.append({
+            'task_id': task.id,
             'task_name': task.name,
             'task_duration': task.duration,
             'task_start': task.start,
@@ -263,6 +264,7 @@ def get_report_project():
             resources.append(task_resource.resource.name)
             total_cost = task_resource.total_cost + total_cost
         data.append({
+            'task_id': task.id,
             'task_name': task.name,
             'task_duration': task.duration,
             'task_start': task.start,
