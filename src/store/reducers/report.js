@@ -14,7 +14,7 @@ const reportStart = (state, action) => {
 }
 
 const reportSuccess = (state, action) => {
-    return { ...state, ...{  error: null,     taskResourcesReport: [...action.taskResourcesReport], taskCostsReport: [...action.taskCostsReport], projectReport: [...action.taskCostsReport]} };
+    return { ...state, ...{  error: null,     taskResourcesReport: [...action.taskResourcesReport], taskCostsReport: [...action.taskCostsReport], projectReport: [...action.projectReport], totalCost: action.totalCost} };
 }
 
 const reportFail = (state, action) => {
