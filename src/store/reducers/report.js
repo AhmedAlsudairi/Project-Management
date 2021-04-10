@@ -4,6 +4,7 @@ const initalState = {
     taskResourcesReport: [],
     taskCostsReport: [],
     projectReport: [],
+    totalCost: null,
     loading: true,
     error: null,
 }
