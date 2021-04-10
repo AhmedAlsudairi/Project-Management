@@ -22,11 +22,10 @@ import DeleteIcon from "@material-ui/icons/Delete";
 // import FilterListIcon from "@material-ui/icons/FilterList";
 import SaveIcon from "@material-ui/icons/Save";
 import CloseIcon from "@material-ui/icons/Close";
-import { InputAdornment, TextField } from "@material-ui/core";
+import { InputAdornment, MenuItem, Select, TextField } from "@material-ui/core";
 import CreateTask from "./CreateTask";
 import * as tasksActions from "../store/actions/tasks";
 import { connect } from "react-redux";
-
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -65,6 +64,7 @@ const headCells = [
   { id: "duration", numeric: false, disablePadding: true, label: "Duration" },
   { id: "start", numeric: false, disablePadding: true, label: "Start " },
   { id: "finish", numeric: false, disablePadding: true, label: "Finish " },
+  { id: "resource", numeric: false, disablePadding: true, label: "Resource " },
   { id: "operations", numeric: false, disablePadding: false },
 ];
 
@@ -235,6 +235,9 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(1),
     width: "25ch",
   },
+  select: {
+    minWidth: 150,
+  },
 }));
 
 function TasksTable(props) {
@@ -251,6 +254,7 @@ function TasksTable(props) {
     duration: "",
     start: "",
     finish: "",
+    resource: "",
     changed: false,
   });
 
@@ -293,6 +297,7 @@ function TasksTable(props) {
         duration: task.duration,
         start: task.start,
         finish: task.finish,
+        resource: task.resource,
         changed: false,
       });
     }
@@ -326,6 +331,10 @@ function TasksTable(props) {
     const newFinish = e.target.value;
     setCurrentTask({ ...currentTask, finish: newFinish, changed: true });
   };
+  const handleResourceChange = (e) => {
+    const newResource = e.target.value;
+    setCurrentTask({ ...currentTask, resource: newResource, changed: true });
+  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -343,7 +352,8 @@ function TasksTable(props) {
   // const isSelected = (id) => selected.indexOf(id) !== -1;
 
   const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, props.tasks.length - page * rowsPerPage);
+    rowsPerPage -
+    Math.min(rowsPerPage, props.tasks.length - page * rowsPerPage);
 
   const taskSelected = (id) => {
     if (id === currentTask.id) return true;
@@ -355,7 +365,13 @@ function TasksTable(props) {
   };
   const handleSave = (task) => {
     console.log("save: ", task);
-    props.onModifyTask(currentTask.id,currentTask.name,currentTask.duration,currentTask.start, currentTask.finish);
+    props.onModifyTask(
+      currentTask.id,
+      currentTask.name,
+      currentTask.duration,
+      currentTask.start,
+      currentTask.finish
+    );
   };
   const handleDisabledSaveBtn = () => {
     if (
@@ -456,7 +472,9 @@ function TasksTable(props) {
                           id="date"
                           type="date"
                           value={
-                            taskSelected(task.id) ? currentTask.start : convert(task.start)
+                            taskSelected(task.id)
+                              ? currentTask.start
+                              : convert(task.start)
                           }
                           onChange={handleStartChange}
                           InputLabelProps={{
@@ -475,6 +493,30 @@ function TasksTable(props) {
                           disabled
                         />
                       </TableCell>
+                      <TableCell>
+                        <Select
+                          value={
+                            taskSelected(task.id)
+                              ? currentTask.resource
+                              : convert(task.resource)
+                          }
+                          className={classes.select}
+                          onChange={handleResourceChange}
+                        >
+                          {props.resources.length > 0 ? (
+                            props.resources.map((resource) => (
+                              <MenuItem key={resource.id} value={resource.name}>
+                                {resource.name}
+                              </MenuItem>
+                            ))
+                          ) : (
+                            <MenuItem value={"disabled"} disabled>
+                              There are no resources!
+                            </MenuItem>
+                          )}
+                        </Select>
+                      </TableCell>
+
                       <TableCell>
                         {currentTask.changed && taskSelected(task.id) ? (
                           <React.Fragment>
@@ -540,6 +582,7 @@ function TasksTable(props) {
 const mapStateToProps = (state) => {
   return {
     tasks: state.tasks.tasks,
+    resources: state.resources.resources,
   };
 };
 
@@ -547,11 +590,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     onFetchTasks: () => dispatch(tasksActions.fetchTasks()),
     onDeleteTask: (id) => dispatch(tasksActions.removeTaskFromProject(id)),
-    onModifyTask: (id,name,duration,start,finish) =>
+    onModifyTask: (id, name, duration, start, finish) =>
       dispatch(
-        tasksActions.modifyTaskInProject(
-          id,name,duration,start,finish
-        )
+        tasksActions.modifyTaskInProject(id, name, duration, start, finish)
       ),
   };
 };
