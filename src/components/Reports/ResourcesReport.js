@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -8,6 +8,8 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { Button, Grid, Typography } from "@material-ui/core";
+import * as resourcesActions from "../../store/actions/resources";
+import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,8 +42,12 @@ const rows = [
   },
 ];
 
-export default function ResourcesReport(props) {
+function ResourcesReport(props) {
   const classes = useStyles();
+
+  useEffect(()=>{
+    props.onFetchResources();
+  },[]);
 
   return (
     <Grid>
@@ -79,13 +85,13 @@ export default function ResourcesReport(props) {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => (
-                  <TableRow key={row.taskID}>
-                    <TableCell align="left">{row.resourceName}</TableCell>
-                    <TableCell align="left">{row.type}</TableCell>
+                {props.resources.map((resource) => (
+                  <TableRow key={resource.id}>
+                    <TableCell align="left">{resource.name}</TableCell>
+                    <TableCell align="left">{resource.type}</TableCell>
                     <TableCell align="left"></TableCell>
-                    <TableCell align="left">{row.max}</TableCell>
-                    <TableCell align="left">{row.stRate}$/hour</TableCell>
+                    <TableCell align="left">{resource.max}</TableCell>
+                    <TableCell align="left">{resource.rate}$/hour</TableCell>
                     <TableCell align="left"></TableCell>
                     <TableCell align="left"></TableCell>
                   </TableRow>
@@ -99,3 +105,21 @@ export default function ResourcesReport(props) {
     </Grid>
   );
 }
+
+const mapStateToProps = (state) => {
+  return {
+    resources: state.resources.resources,
+
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onFetchResources: () =>
+      dispatch(
+      resourcesActions.fetchResources()
+    ),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ResourcesReport);
