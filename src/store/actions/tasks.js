@@ -86,12 +86,13 @@ export const removeTaskFromProject = (id) => {
     return dispatch => {
         dispatch(fetchTasksStart());
 
-        axios.delete(`/tasks?id=${id}`)
+        axios.delete(`/tasks/${id}`)
         .then(res => {
             dispatch(fetchTasks());
         })
         .catch(err=>{
             dispatch(fetchTasksFail(err));
+            console.log(err);
         });
     }
 }
@@ -109,7 +110,7 @@ export const modifyTaskInProject = (id,name,duration,start,finish) => {
             finish: finish
         }
         console.log(data);
-        axios.patch(`/tasks?id=${id}`,data)
+        axios.patch(`/tasks/${id}`,data)
         .then(res => {
             dispatch(fetchTasks());
             dispatch(createTasksuccess());

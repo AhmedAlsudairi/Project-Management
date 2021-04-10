@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -8,6 +8,8 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { Button, Grid, TableFooter, Typography } from "@material-ui/core";
+import * as reportActions from "../../store/actions/report";
+import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -49,8 +51,12 @@ const rows = [
   },
 ];
 
-export default function ProjectCostReport(props) {
+function ProjectCostReport(props) {
   const classes = useStyles();
+
+  useEffect(() => {
+    props.onFetchReport();
+  }, []);
 
   return (
     <Grid>
@@ -88,25 +94,34 @@ export default function ProjectCostReport(props) {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => (
+                {props.projectReport.map((row) => {
+                  var startDate = row.task_start;
+                  startDate = new Date(startDate).toUTCString();
+                  startDate = startDate.split(" ").slice(0, 4).join(" ");
+
+                  var finishDate = row.task_finish;
+                  finishDate = new Date(finishDate).toUTCString();
+                  finishDate = finishDate.split(" ").slice(0, 4).join(" ");
+                  return(
                   <TableRow key={row.taskID}>
                     <TableCell align="left">{row.taskID}</TableCell>
-                    <TableCell align="left">{row.taskName}</TableCell>
-                    <TableCell align="left">{row.duration}</TableCell>
-                    <TableCell align="left">{row.start}</TableCell>
-                    <TableCell align="left">{row.finish}</TableCell>
-                    <TableCell align="left">{row.resourceName}</TableCell>
-                    <TableCell align="left">{row.totalCost}$</TableCell>
+                    <TableCell align="left">{row.task_name}</TableCell>
+                    <TableCell align="left">{row.task_duration}</TableCell>
+                    <TableCell align="left">{startDate}</TableCell>
+                    <TableCell align="left">{finishDate}</TableCell>
+                    <TableCell align="left">{row.resources}</TableCell>
+                    <TableCell align="left">{row.total_cost}$</TableCell>
                   </TableRow>
-                ))}
+                )})}
                 <TableRow>
                   <TableCell align="left">Total Cost</TableCell>
                   <TableCell align="left" colSpan={5}></TableCell>
                   <TableCell align="left">
-                    {rows.reduce(
+                    {/* {rows.reduce(
                       (prev, current) => prev + parseFloat(current.totalCost),
                       0
-                    )}
+                    )} */}
+                    {props.totalCost}
                     $
                   </TableCell>
                 </TableRow>
@@ -119,3 +134,19 @@ export default function ProjectCostReport(props) {
     </Grid>
   );
 }
+
+const mapStateToProps = (state) => {
+  console.log(state);
+  return {
+    projectReport: state.report.projectReport,
+    totalCost: state.report.totalCost,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onFetchReport: () => dispatch(reportActions.fetchProjectReport()),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProjectCostReport);

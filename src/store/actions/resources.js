@@ -87,7 +87,7 @@ export const removeResourceFromProject = (id) => {
     return dispatch => {
         dispatch(fetchResourcesStart());
 
-        axios.delete(`/Resource?ID=${id}`)
+        axios.delete(`/resources/${id}`)
             .then(res => {
                 dispatch(fetchResources());
             })
@@ -109,7 +109,7 @@ export const modifyResourceInProject = (id, name, type, max, rate) => {
             rate: rate,
         }
         console.log(data);
-        axios.patch(`/tasks?id=${id}`, data)
+        axios.patch(`/resources/${id}`, data)
             .then(res => {
                 dispatch(fetchResources());
                 dispatch(createResourcesuccess());

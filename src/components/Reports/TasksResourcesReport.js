@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -8,7 +8,8 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { Button, Grid, Typography } from "@material-ui/core";
-
+import * as reportActions from "../../store/actions/report";
+import { connect } from "react-redux";
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -46,8 +47,12 @@ const rows = [
   },
 ];
 
-export default function TasksResourcesReport(props) {
+function TasksResourcesReport(props) {
   const classes = useStyles();
+
+  useEffect(() => {
+    props.onFetchReport();
+  }, []);
 
   return (
     <Grid>
@@ -84,16 +89,26 @@ export default function TasksResourcesReport(props) {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => (
-                  <TableRow key={row.taskID}>
-                    <TableCell align="left">{row.taskID}</TableCell>
-                    <TableCell align="left">{row.taskName}</TableCell>
-                    <TableCell align="left">{row.duration}</TableCell>
-                    <TableCell align="left">{row.start}</TableCell>
-                    <TableCell align="left">{row.finish}</TableCell>
-                    <TableCell align="left">{row.resourceName}</TableCell>
-                  </TableRow>
-                ))}
+                {props.taskResourcesReport.map((row) => {
+                  var startDate = row.start;
+                  startDate = new Date(startDate).toUTCString();
+                  startDate = startDate.split(" ").slice(0, 4).join(" ");
+
+                  var finishDate = row.finish;
+                  finishDate = new Date(finishDate).toUTCString();
+                  finishDate = finishDate.split(" ").slice(0, 4).join(" ");
+                  return (
+                    <TableRow key={row.id}>
+                      <TableCell align="left">{row.id}</TableCell>
+                      <TableCell align="left">{row.name}</TableCell>
+                      <TableCell align="left">{row.duration}</TableCell>
+                      <TableCell align="left">{startDate}</TableCell>
+                      <TableCell align="left">{finishDate}</TableCell>
+                      <TableCell align="left">{row.resources}</TableCell>
+                    </TableRow>
+                  )
+                })
+                }
               </TableBody>
             </Table>
           </TableContainer>
@@ -103,3 +118,18 @@ export default function TasksResourcesReport(props) {
     </Grid>
   );
 }
+
+const mapStateToProps = (state) => {
+  console.log(state);
+  return {
+    taskResourcesReport: state.report.taskResourcesReport,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onFetchReport: () => dispatch(reportActions.fetchTaskResourcesReport()),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(TasksResourcesReport);

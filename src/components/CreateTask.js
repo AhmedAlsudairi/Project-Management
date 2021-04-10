@@ -83,7 +83,7 @@ function CreateTask(props) {
     <Paper square className={classes.paper}>
       <Typography variant="h5">Create a task:</Typography>
       <form>
-        <TextField
+        {/* <TextField
           className={classes.textField}
           required
           id="taskID"
@@ -91,7 +91,7 @@ function CreateTask(props) {
           margin="dense"
           value={ID.value}
           onChange={handleIDChange}
-        />
+        /> */}
         <TextField
           className={classes.textField}
           required
@@ -131,7 +131,7 @@ function CreateTask(props) {
           variant="contained"
           color="primary"
           type={"submit"}
-          disabled={!(ID.valid && name.valid && duration.valid && start.valid)}
+          disabled={!(name.valid && duration.valid && start.valid)}
         >
           Create new task
         </Button>
