@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -50,9 +50,9 @@ const rows = [
 function TasksResourcesReport(props) {
   const classes = useStyles();
 
-  useEffect(()=>{
+  useEffect(() => {
     props.onFetchReport();
-  },[]);
+  }, []);
 
   return (
     <Grid>
@@ -89,16 +89,25 @@ function TasksResourcesReport(props) {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {props.taskResourcesReport.map((row) => (
-                  <TableRow key={row.taskID}>
-                    <TableCell align="left">{row.id}</TableCell>
-                    <TableCell align="left">{row.name}</TableCell>
-                    <TableCell align="left">{row.duration}</TableCell>
-                    <TableCell align="left">{row.start}</TableCell>
-                    <TableCell align="left">{row.finish}</TableCell>
-                    <TableCell align="left">{row.resources}</TableCell>
-                  </TableRow>
-                ))
+                {props.taskResourcesReport.map((row) => {
+                  var startDate = row.start;
+                  startDate = new Date(startDate).toUTCString();
+                  startDate = startDate.split(" ").slice(0, 4).join(" ");
+
+                  var finishDate = row.finish;
+                  finishDate = new Date(finishDate).toUTCString();
+                  finishDate = finishDate.split(" ").slice(0, 4).join(" ");
+                  return (
+                    <TableRow key={row.id}>
+                      <TableCell align="left">{row.id}</TableCell>
+                      <TableCell align="left">{row.name}</TableCell>
+                      <TableCell align="left">{row.duration}</TableCell>
+                      <TableCell align="left">{startDate}</TableCell>
+                      <TableCell align="left">{finishDate}</TableCell>
+                      <TableCell align="left">{row.resources}</TableCell>
+                    </TableRow>
+                  )
+                })
                 }
               </TableBody>
             </Table>
