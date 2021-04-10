@@ -309,6 +309,7 @@ function ResourcesTable(props) {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [currentResource, setCurrentResource] = React.useState({
+    id: "",
     name: "",
     type: "",
     max: "",
@@ -398,7 +399,7 @@ function ResourcesTable(props) {
   };
   const handleSave = (resource) => {
     console.log("save: ", resource);
-    props.onModifyResource()
+    props.onModifyResource(currentResource.id,currentResource.name, currentResource.type, currentResource.max, currentResource.rate);
   };
   const handleDisabledSaveBtn = () => {
     if (
