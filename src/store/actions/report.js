@@ -34,11 +34,12 @@ export const fetchTaskResourcesReport = () => {
         .then(res => {
             let fechedReport = [...res.data.report];
             console.log(fechedReport);
-            dispatch(fetchReportSuccess(fechedReport,null,null,null));
+            dispatch(fetchReportSuccess(fechedReport,[],[],[]));
             
         })
         .catch(err=>{
             dispatch(fetchReportFail(err));
+            console.log(err);
         });
     }
 }
@@ -51,7 +52,7 @@ export const fetchTaskCostsReport = () => {
         .then(res => {
             let fechedReport = [...res.data.report];
             console.log(fechedReport);
-            dispatch(fetchReportSuccess(null,fechedReport,null,null));
+            dispatch(fetchReportSuccess([],fechedReport,[],[]));
             
         })
         .catch(err=>{
@@ -68,7 +69,7 @@ export const fetchProjectReport = () => {
         .then(res => {
             let fechedReport = [...res.data.report];
             console.log(fechedReport);
-            dispatch(fetchReportSuccess(null,null,fechedReport,res.data.project_total_cost));
+            dispatch(fetchReportSuccess([],[],fechedReport,res.data.project_total_cost));
             
         })
         .catch(err=>{
