@@ -381,6 +381,8 @@ function TasksTable(props) {
       resource: currentTask.resource,
       changed: false,
     });
+    console.log(task.id,task.resource);
+    props.onAssignResourceToTask(currentTask.id,currentTask.resource);
   };
   const handleDisabledSaveBtn = () => {
     if (
@@ -515,7 +517,7 @@ function TasksTable(props) {
                         >
                           {props.resources.length > 0 ? (
                             props.resources.map((resource) => (
-                              <MenuItem key={resource.id} value={resource.name}>
+                              <MenuItem key={resource.id} value={resource.id}>
                                 {resource.name}
                               </MenuItem>
                             ))
@@ -604,6 +606,10 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(
         tasksActions.modifyTaskInProject(id, name, duration, start, finish)
       ),
+    onAssignResourceToTask: (taskID,resourceID) =>
+      dispatch(
+        tasksActions.assignResourceToTask(taskID,resourceID)
+      ),  
   };
 };
 
