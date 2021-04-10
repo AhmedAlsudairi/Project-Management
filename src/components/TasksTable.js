@@ -295,8 +295,8 @@ function TasksTable(props) {
         id: task.id,
         name: task.name,
         duration: task.duration,
-        start: task.start,
-        finish: task.finish,
+        start: convert(task.start),
+        finish: convert(task.finish),
         resource: task.resource,
         changed: false,
       });
@@ -372,6 +372,15 @@ function TasksTable(props) {
       currentTask.start,
       currentTask.finish
     );
+    setCurrentTask({
+      id: currentTask.id,
+      name: currentTask.name,
+      duration: currentTask.duration,
+      start: currentTask.start,
+      finish: currentTask.finish,
+      resource: currentTask.resource,
+      changed: false,
+    });
   };
   const handleDisabledSaveBtn = () => {
     if (
@@ -392,6 +401,7 @@ function TasksTable(props) {
       duration: task.duration,
       start: task.start,
       finish: task.finish,
+      resource: task.resource,
       changed: false,
     });
   };
@@ -498,7 +508,7 @@ function TasksTable(props) {
                           value={
                             taskSelected(task.id)
                               ? currentTask.resource
-                              : convert(task.resource)
+                              : task.resource
                           }
                           className={classes.select}
                           onChange={handleResourceChange}
