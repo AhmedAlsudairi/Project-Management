@@ -385,7 +385,7 @@ function TasksTable(props) {
   };
   const handleSave = (task) => {
     console.log("save: ", task);
-    props.onModifyTask();
+    props.onModifyTask(currentTask.id,currentTask.name,currentTask.duration,currentTask.start,currentTask.finish);
   };
   const handleDisabledSaveBtn = () => {
     if (
