@@ -21,35 +21,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const rows = [
-  {
-    taskID: "1",
-    taskName: "task1",
-    duration: "5 days",
-    start: "10-11-2020",
-    finish: "14-11-2020",
-    resourceName: "resource1",
-    totalCost: "600",
-  },
-  {
-    taskID: "2",
-    taskName: "task1",
-    duration: "5 days",
-    start: "10-11-2020",
-    finish: "14-11-2020",
-    resourceName: "resource2",
-    totalCost: "600",
-  },
-  {
-    taskID: "3",
-    taskName: "task1",
-    duration: "5 days",
-    start: "10-11-2020",
-    finish: "14-11-2020",
-    resourceName: "resource1",
-    totalCost: "600",
-  },
-];
 
 function ProjectCostReport(props) {
   const classes = useStyles();
@@ -104,12 +75,12 @@ function ProjectCostReport(props) {
                   finishDate = finishDate.split(" ").slice(0, 4).join(" ");
                   return(
                   <TableRow key={row.taskID}>
-                    <TableCell align="left">{row.taskID}</TableCell>
+                    <TableCell align="left">{row.task_id}</TableCell>
                     <TableCell align="left">{row.task_name}</TableCell>
                     <TableCell align="left">{row.task_duration}</TableCell>
                     <TableCell align="left">{startDate}</TableCell>
                     <TableCell align="left">{finishDate}</TableCell>
-                    <TableCell align="left">{row.resources}</TableCell>
+                    <TableCell align="left">{row.resources.map((r)=> r+', ')}</TableCell>
                     <TableCell align="left">{row.total_cost}$</TableCell>
                   </TableRow>
                 )})}

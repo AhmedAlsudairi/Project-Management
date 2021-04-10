@@ -20,32 +20,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const rows = [
-  {
-    taskID: "1",
-    taskName: "task1",
-    duration: "5 days",
-    start: "10-11-2020",
-    finish: "14-11-2020",
-    resourceName: "resource1",
-  },
-  {
-    taskID: "2",
-    taskName: "task1",
-    duration: "5 days",
-    start: "10-11-2020",
-    finish: "14-11-2020",
-    resourceName: "resource2",
-  },
-  {
-    taskID: "3",
-    taskName: "task1",
-    duration: "5 days",
-    start: "10-11-2020",
-    finish: "14-11-2020",
-    resourceName: "resource1",
-  },
-];
 
 function TasksResourcesReport(props) {
   const classes = useStyles();
@@ -104,7 +78,7 @@ function TasksResourcesReport(props) {
                       <TableCell align="left">{row.duration}</TableCell>
                       <TableCell align="left">{startDate}</TableCell>
                       <TableCell align="left">{finishDate}</TableCell>
-                      <TableCell align="left">{row.resources}</TableCell>
+                      <TableCell align="left">{row.resources.map((r)=> r+', ')}</TableCell>
                     </TableRow>
                   )
                 })

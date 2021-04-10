@@ -381,7 +381,7 @@ function TasksTable(props) {
       resource: currentTask.resource,
       changed: false,
     });
-    console.log(task.id,task.resource);
+    console.log(currentTask.resource);
     props.onAssignResourceToTask(currentTask.id,currentTask.resource);
   };
   const handleDisabledSaveBtn = () => {
