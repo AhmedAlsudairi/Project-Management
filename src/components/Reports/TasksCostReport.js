@@ -1,4 +1,4 @@
-import React from "react";
+import React , { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -8,7 +8,8 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { Button, Grid, Typography } from "@material-ui/core";
-
+import * as reportActions from "../../store/actions/report";
+import { connect } from "react-redux";
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -49,8 +50,12 @@ const rows = [
   },
 ];
 
-export default function TasksCostReport(props) {
+function TasksCostReport(props) {
   const classes = useStyles();
+
+  useEffect(() => {
+    props.onFetchReport();
+  }, []);
 
   return (
     <Grid>
@@ -88,17 +93,25 @@ export default function TasksCostReport(props) {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => (
-                  <TableRow key={row.taskID}>
-                    <TableCell align="left">{row.taskID}</TableCell>
-                    <TableCell align="left">{row.taskName}</TableCell>
-                    <TableCell align="left">{row.duration}</TableCell>
-                    <TableCell align="left">{row.start}</TableCell>
-                    <TableCell align="left">{row.finish}</TableCell>
-                    <TableCell align="left">{row.resourceName}</TableCell>
-                    <TableCell align="left">{row.totalCost}$</TableCell>
+                {props.taskCostsReport.map((row) => {
+                                    var startDate = row.task_start;
+                                    startDate = new Date(startDate).toUTCString();
+                                    startDate = startDate.split(" ").slice(0, 4).join(" ");
+                  
+                                    var finishDate = row.task_finish;
+                                    finishDate = new Date(finishDate).toUTCString();
+                                    finishDate = finishDate.split(" ").slice(0, 4).join(" ");
+                  return(
+                  <TableRow key={row.name}>
+                    <TableCell align="left">{row.id}</TableCell>
+                    <TableCell align="left">{row.task_name}</TableCell>
+                    <TableCell align="left">{row.task_duration}</TableCell>
+                    <TableCell align="left">{startDate}</TableCell>
+                    <TableCell align="left">{finishDate}</TableCell>
+                    <TableCell align="left">{row.resources}</TableCell>
+                    <TableCell align="left">{row.total_cost}$</TableCell>
                   </TableRow>
-                ))}
+                )})}
               </TableBody>
             </Table>
           </TableContainer>
@@ -108,3 +121,18 @@ export default function TasksCostReport(props) {
     </Grid>
   );
 }
+
+const mapStateToProps = (state) => {
+  console.log(state);
+  return {
+    taskCostsReport: state.report.taskCostsReport,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onFetchReport: () => dispatch(reportActions.fetchTaskCostsReport()),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(TasksCostReport);
