@@ -9,7 +9,7 @@ def generateID(name):
 
 class Task(db.Model):
     __tablename__ = "Task"
-    id = db.Column(db.String(), primary_key=True, nullable=False)
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
     name = db.Column(db.String(), nullable=False)
     duration = db.Column(db.Integer, nullable=False)
     start = db.Column(db.DateTime, nullable=False)
@@ -18,7 +18,6 @@ class Task(db.Model):
 
 
     def __init__(self, name, duration, start, finish):
-        self.id  = generateID(name)
         self.name = name
         self.duration = duration
         self.start = datetime.strptime(start, '%Y-%m-%d')
@@ -59,7 +58,7 @@ class Task(db.Model):
 
 class Resource(db.Model):
     __tablename__ = "Resource"
-    id = db.Column(db.String(), primary_key=True, nullable=False)
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
     name =  db.Column(db.String(), nullable=False)
     type = db.Column(db.String(), nullable=False)
     max = db.Column(db.Float, nullable=False)
@@ -69,7 +68,6 @@ class Resource(db.Model):
 
 
     def __init__(self, name, type, max, rate):
-        self.id  = generateID(name)
         self.name = name
         self.type = type
         self.max = max
@@ -101,8 +99,8 @@ class Resource(db.Model):
         }
 class Tasks_Resources(db.Model):
     __tablename__ = "Tasks_Resources"
-    task_id = db.Column(db.String(), db.ForeignKey("Task.id", ondelete="CASCADE"), primary_key=True)
-    resource_id = db.Column(db.String(), db.ForeignKey("Resource.id", ondelete="CASCADE"), primary_key=True)
+    task_id = db.Column(db.Integer, db.ForeignKey("Task.id", ondelete="CASCADE"), primary_key=True)
+    resource_id = db.Column(db.Integer, db.ForeignKey("Resource.id", ondelete="CASCADE"), primary_key=True)
     total_cost = db.Column(db.Float, nullable=True)
 
 
